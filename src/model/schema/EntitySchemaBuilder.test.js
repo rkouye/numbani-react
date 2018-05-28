@@ -1,5 +1,8 @@
 import EntitySchemaBuilder from './EntitySchemaBuilder';
+import expect from 'expect';
 
-test('hides implementation details', ()=>{
-    expect(new EntitySchemaBuilder().instructions).toBeUndefined();
+describe("EntitySchemaBuidler", ()=>{
+    it('hides implementation details', ()=>{
+        expect(new EntitySchemaBuilder().instructions).toBe(undefined);
+    });
 });

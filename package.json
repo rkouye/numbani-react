@@ -34,10 +34,10 @@
     "react": "^16.4.0",
     "react-dom": "^16.4.0"
   },
-  "author": "",
-  "homepage": "",
+  "author": "numbani",
+  "homepage": "https://github.com/numbani/numbani-react",
   "license": "MIT",
-  "repository": "",
+  "repository": "https://github.com/numbani/numbani-react",
   "keywords": [
     "react-component"
   ]
