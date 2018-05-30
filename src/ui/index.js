@@ -5,7 +5,7 @@ import React, { Component } from 'react';
  * @param {import("../model/core/EntityRepo.js").default} repo 
  * @param {Object} uiLib
  */
-function makeComponent(repo, uiLib){
+function makeEntityView(repo, uiLib){
     const EntityView = {};
     const EntityViewContext = React.createContext();
     
@@ -13,13 +13,17 @@ function makeComponent(repo, uiLib){
         constructor(props){
             super(props);
             this.state = {
-                value : this.props.value
+                value : this.props.value,
+                edited : {}
             };
         }
 
         getAttributeUpdater = (attribute)=> {
-            return value => {
-                this.setState({[attribute] : value});
+            return attributeValue => {
+                this.setState((prevState,props)=> ({
+                    value : { ...prevState.value, [attribute] : attributeValue},
+                    edited : { ...prevState.edited, [attribute] : true}
+                }));
             };
         }
 
@@ -60,7 +64,7 @@ function makeComponent(repo, uiLib){
 const UI = function(uiLib){
     return {
         entity(repo){ 
-            return makeComponent(repo, uiLib);
+            return makeEntityView(repo, uiLib);
         }
     }
 };
