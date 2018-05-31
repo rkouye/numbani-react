@@ -5,7 +5,7 @@
  * @export
  * @class AuthService
  */
-class AuthService {
+export default class AuthService {
     /**
      * Get the actually connected user or
      * null if the user is not connected
@@ -15,6 +15,17 @@ class AuthService {
     getUser(){
         throw new Error('Not implemented');
     }
+
+    /**
+     * Called when there is a change in auth state. The callback should not expect a param.
+     * @param {function} callback 
+     * @memberof AuthService
+     * @return {function} A function to unsubscribe from this
+     */
+    onAuthStateChanged(callback){
+        throw new Error('Not implemented');
+    }
+
     /**
      * Helper for user state
      * 
@@ -31,23 +42,5 @@ class AuthService {
      */
     signOut(){
         throw new Error('Not implemented');
-    }
-}
-
-/**
- * 
- * 
- * @export
- * @class AuthServiceBuilder
- */
-export default class AuthServiceBuilder {
-    /**
-     * 
-     * 
-     * @returns 
-     * @memberof AuthServiceBuilder
-     */
-    build(){
-        return AuthService;
     }
 }
