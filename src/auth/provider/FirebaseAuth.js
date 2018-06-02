@@ -1,19 +1,30 @@
 import AuthService from '../AuthService';
+import firebase from 'firebase/app';
 
-const f_firebase = Symbol("Internal field firebase");
+const f_firebase_auth = Symbol("Internal field firebase.auth.Auth");
 
 export default class FirebaseAuth extends AuthService {
     /**
-     * @param {*} firebase Initialized firebase instance
+     * @param {*} firebaseAuth Initialized firebase instance
      */
-    constructor(firebase){
-        this[f_firebase] = firebase
-        const that = firebase.auth();
-        this.onAuthStateChanged = that.onAuthStateChanged;
-        this.signOut = that.signOut;
+    constructor(firebaseAuth){
+        super();
+        if(! firebase.auth)
+            throw new Error('Import firebase/auth first');
+        if(!(firebaseAuth instanceof firebase.auth.Auth))
+            throw new Error('Argument firebaseAuth is not an instance of firebase.auth.Auth.'
+            +' Use firebase.auth() to have one');
+        this[f_firebase_auth] = firebaseAuth;
     }
 
-    getUser(){
-        return this[f_firebase].auth().currentUser;
+    onAuthStateChanged = (callback) => {
+        return this[f_firebase_auth].onAuthStateChanged(callback);
+    }
+
+    signOut = () => {
+        return this[f_firebase_auth].signOut();
+    }
+    getUser = () => {
+        return this[f_firebase_auth].currentUser;
     }
 }

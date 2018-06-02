@@ -1,4 +1,4 @@
-import types from '../../model/schema/types';
+import types from '../../../model/schema/types';
 import React, { Component } from 'react';
 import { Input } from 'reactstrap';
 
@@ -31,7 +31,6 @@ const bootstrap4UiLib = {
         if(type.doExtends(types.String))
             control = ControlString;
         
-        console.log(type);
         if(control === null)
             throw new Error(`Type ${type.toString()} not supported in bootstrap ui lib`);
         return control;
