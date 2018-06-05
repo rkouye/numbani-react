@@ -11,7 +11,7 @@
     "umd"
   ],
   "scripts": {
-    "build": "nwb build-react-component",
+    "build": "nwb build-react-component --keep-proptypes",
     "clean": "nwb clean-module && nwb clean-demo",
     "start": "nwb serve-react-demo",
     "test": "nwb test-react",
@@ -19,7 +19,6 @@
     "test:watch": "nwb test-react --server"
   },
   "dependencies": {
-    "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.1.1",
     "i18next": "^11.3.2",
     "prop-types": "^15.6.1",
@@ -28,11 +27,18 @@
   "peerDependencies": {
     "react": "16.x",
     "firebaseui": "^3.0.0",
-    "firebase": "^5.0.4"
+    "firebase": "^5.0.4",
+    "babel-polyfill": "^6.26.0"
   },
   "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "babel-polyfill": "^6.26.0",
     "eslint": "^4.19.1",
-    "eslint-plugin-react": "^7.8.2",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-flowtype": "^2.49.3",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.9.1",
     "firebase": "^5.0.4",
     "firebaseui": "^3.0.0",
     "nwb": "0.21.x",
