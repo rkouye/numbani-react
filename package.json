@@ -22,6 +22,7 @@
     "bootstrap": "^4.1.1",
     "i18next": "^11.3.2",
     "prop-types": "^15.6.1",
+    "react-promise": "^2.0.3",
     "reactstrap": "^6.0.1"
   },
   "peerDependencies": {

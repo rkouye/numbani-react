@@ -7,6 +7,7 @@ import EntitySchemaBuilder from '../../src/model/schema/EntitySchemaBuilder';
 import types from '../../src/model/schema/types';
 import UI from '../../src/ui';
 import bootstrap4UiLib from '../../src/ui/lib/bootstrap4';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { AuthServiceProvider, AuthServiceConsumer } from '../../src/ui/auth/AuthService';
 import Login from '../../src/ui/firebaseui/Login';
@@ -27,7 +28,7 @@ const userSchema = new EntitySchemaBuilder()
   .addAttribute("email", types.String.required())
   .addAttribute("displayName", types.String.required())
   .build();
-const user = em.buildEntity("user", { schema: userSchema });
+const user = em.buildEntity("users", { schema: userSchema });
 const UserView = UI(bootstrap4UiLib).entity(user);
 
 //FIXME: React strict mode
@@ -41,18 +42,22 @@ class Demo extends Component {
             {
               authService =>
                 authService.userIsConnected() ?
-                  <div>
-                    <UserView.one value={authService.getUser()}>
-                      <UserView.fields.email />
-                      <br/>
-                      <UserView.fields.displayName />
-                      <br/>
-                    </UserView.one>
-                    <br/>
-                   <button onClick={authService.signOut}>Sign Out</button>
-                  </div>
+                  <UserView.read entityRef={db.collection("users").doc("test")}>
+                    {
+                      user => <div>
+                        <UserView.one value={user}>
+                          Email : <UserView.fields.email />
+                          <br />
+                          Nom : <UserView.fields.displayName />
+                          <br />
+                        </UserView.one>
+                        <br />
+                        <button onClick={authService.signOut}>Sign Out</button>
+                      </div>
+                    }
+                  </UserView.read>
                   :
-                  <Login 
+                  <Login
                     firebaseAuth={firebase.auth()}
                     firebaseui={firebaseui}
                     uiConfig={{
