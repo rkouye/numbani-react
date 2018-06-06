@@ -42,8 +42,8 @@ class FirestorePersistence extends Persistence {
         return ref.get().then(doc => {
             // FIXME: Handle query as ref
             // FIXME: Translate
-            if(!(doc.exist)) Promise.reject(new Error("Missing value"));
-            return [doc.data()];
+            if(!(doc.exists)) return Promise.reject(new Error("Missing value"));
+            return doc.data();
         });
     }
 
