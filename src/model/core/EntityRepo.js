@@ -14,10 +14,7 @@ class EntityRepo {
         this.schema = entitySchema;
     }
 
-    save(value, at){
-        //TODO: Emit pre-save event
-        //TODO: Emit pre-save&pre-validation event
-       
+    async validate(value){
         // Perform attributes validation
         /** @type {Object.<string, Array.<import("../schema/types/ValidationError").default>} */
         let validationErrors = {};
@@ -27,7 +24,15 @@ class EntityRepo {
                 this.schema.typesMap[attribute].getValidationErrors(value[attribute])
             );
         }
+        //  TODO: Async validation
         //-- TODO: Cross field validation
+        return validationErrors;
+    }
+
+    async save(value, at){
+        //TODO: Emit pre-save event
+        //TODO: Emit pre-save&pre-validation event
+        const validationErrors = await this.validate(value);
 
         let validationErrorsCount = 0;
         for (let attribute in validationErrors){

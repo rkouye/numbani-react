@@ -44,7 +44,7 @@ describe("EntityRepo", ()=>{
         });
     });
     
-    it('fail to save with validation error', () =>{
+    it('fail to save with validation error', (done) =>{
         const mockPersistence = new MockPersistence();
         const ref = Symbol("Saved value reference");
         mockPersistence.at("user").save = createSpy().andReturn(Promise.resolve(ref));
@@ -58,16 +58,17 @@ describe("EntityRepo", ()=>{
                     .build();
     
         const entity = em.buildEntity("user", {schema : userSchema});
-        return entity.save({name : "Paul", organization : null}).catch( error => {
+        entity.save({name : "Paul", organization : null}).catch( error => {
             expect(error instanceof Error).toBe(true);
             expect(error.validationErrorsCount).toBe(1);
             expect(error.validationErrors.name.length).toBe(0);
             expect(error.validationErrors.organization.length).toBe(1);
             expect(error.validationErrors.organization[0].message).toBe("validations.required");
+            done();
         });
     });
     
-    it('fails to save save when persistence is down', () =>{
+    it('fails to save save when persistence is down', (done) =>{
         const mockPersistence = new MockPersistence();
         const error = new Error("Connection failure");
         mockPersistence.at("user").save = createSpy().andCall(() => Promise.reject(error));
@@ -81,8 +82,9 @@ describe("EntityRepo", ()=>{
                     .build();
     
         const entity = em.buildEntity("user", {schema : userSchema});
-        return entity.save({name : "Paul"}).catch(catchedError => {
+        entity.save({name : "Paul"}).catch(catchedError => {
             expect(catchedError).toBe(error);
+            done();
         });
     });
 });
