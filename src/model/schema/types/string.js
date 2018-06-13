@@ -17,7 +17,14 @@ const string = new Type().extendWithValidators(
 string.max = function(length){
     return this.extendWithValidators(
         value => (emptyValue(value) || (validString(value) && value.length<=length))?
-        []:[new ValidationError(i18n.t("numbani:validations.string.invalidLength", {value, expected : length, actual : value.length}))]
+        []:[new ValidationError(i18n.t("numbani:validations.string.invalidMaxLength", {value, expected : length, actual : value.length}))]
+    );
+}
+
+string.min = function(length){
+    return this.extendWithValidators(
+        value => (emptyValue(value) || (validString(value) && value.length>=length))?
+        []:[new ValidationError(i18n.t("numbani:validations.string.invalidMinLength", {value, expected : length, actual : value.length}))]
     );
 }
 

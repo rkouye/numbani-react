@@ -29,7 +29,7 @@ describe("Types", ()=>{
         expect(types.String.accepts("What's upppp")).toBe(true);
     });
     
-    it('validates length', ()=>{
+    it('validates max length', ()=>{
         expect(types.String.max(0).accepts("")).toBe(true);
         expect(types.String.max(1).accepts("Oups")).toBe(false);
         expect(types.String.max(5).accepts("Noups")).toBe(true);
@@ -38,5 +38,17 @@ describe("Types", ()=>{
         expect(types.String.max(5).required().accepts(undefined)).toBe(false);
         expect(types.String.max(5).required().accepts("Bla  bla")).toBe(false);
         expect(types.String.max(2).required().accepts("OK")).toBe(true);
+    });
+
+    it('validates min length', ()=>{
+        expect(types.String.min(0).accepts("")).toBe(true);
+        expect(types.String.min(1).accepts("")).toBe(false);
+        expect(types.String.min(5).accepts("Cool !")).toBe(true);
+        expect(types.String.min(5).accepts("Cool!")).toBe(true);
+        expect(types.String.min(5).accepts(null)).toBe(true);
+        expect(types.String.min(5).accepts(undefined)).toBe(true);
+        expect(types.String.min(5).required().accepts(undefined)).toBe(false);
+        expect(types.String.min(5).required().accepts("NOK")).toBe(false);
+        expect(types.String.min(2).required().accepts("OK")).toBe(true);
     });
 });
