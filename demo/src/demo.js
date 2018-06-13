@@ -26,7 +26,7 @@ const em = new EntityManagerBuilder()
   .build();
 const userSchema = new EntitySchemaBuilder()
   .addAttribute("email", types.String.required())
-  .addAttribute("displayName", types.String.required())
+  .addAttribute("displayName", types.String.required().min(5))
   .build();
 const user = em.buildEntity("users", { schema: userSchema });
 const UserView = UI(bootstrap4UiLib).entity(user);
@@ -42,6 +42,8 @@ class Demo extends Component {
             {
               authService =>
                 authService.userIsConnected() ?
+                  <React.Fragment>
+                    Display user info with an EntityView.one in an EntityView.read
                   <UserView.read entityRef={db.collection("users").doc("test")}>
                     {
                       user => <div>
@@ -52,10 +54,22 @@ class Demo extends Component {
                           <br />
                         </UserView.one>
                         <br />
-                        <button onClick={authService.signOut}>Sign Out</button>
+                        
                       </div>
                     }
                   </UserView.read>
+                    <p>Allow editing  some user info in an EntityView.connect</p>
+                    <UserView.connect entityRef={db.collection("users").doc("test")} edit>
+                      Nom : <UserView.fields.displayName />
+                      <br/>
+                      <UserView.button.save>Save</UserView.button.save>
+                    </UserView.connect>
+                    <br />
+                    -------------------------
+                    <br />
+                    <button onClick={authService.signOut}>Sign Out</button>
+                  </React.Fragment>
+                  
                   :
                   <Login
                     firebaseAuth={firebase.auth()}

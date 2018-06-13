@@ -1,6 +1,6 @@
 import types from '../../../model/schema/types';
 import React, { Component } from 'react';
-import { Input } from 'reactstrap';
+import { Input, Button } from 'reactstrap';
 
 class ControlString extends Component {
     handleChange = (event) => {
@@ -34,6 +34,10 @@ const bootstrap4UiLib = {
         if(control === null)
             throw new Error(`Type ${type.toString()} not supported in bootstrap ui lib`);
         return control;
+    },
+
+    getActionButton(){
+        return Button;
     }
 
 };
