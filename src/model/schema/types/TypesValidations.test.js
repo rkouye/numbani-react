@@ -38,6 +38,13 @@ describe("Types", ()=>{
         expect(types.String.max(5).required().accepts(undefined)).toBe(false);
         expect(types.String.max(5).required().accepts("Bla  bla")).toBe(false);
         expect(types.String.max(2).required().accepts("OK")).toBe(true);
+
+        expect(types.String.max(5).getInfo("string.max")).toBe(5);
+        expect(types.String.max(5).max(2).getInfo("string.max")).toBe(2);
+        expect(types.String.max(2).max(5).getInfo("string.max")).toBe(2);
+        expect(types.String.max(2).min(5).getInfo("string.max")).toBe(2);
+        expect(types.String.min(2).max(5).getInfo("string.max")).toBe(5);
+        expect(types.String.required().getInfo("string.max")).toBe(undefined);
     });
 
     it('validates min length', ()=>{
@@ -50,5 +57,12 @@ describe("Types", ()=>{
         expect(types.String.min(5).required().accepts(undefined)).toBe(false);
         expect(types.String.min(5).required().accepts("NOK")).toBe(false);
         expect(types.String.min(2).required().accepts("OK")).toBe(true);
+
+        expect(types.String.min(5).getInfo("string.min")).toBe(5);
+        expect(types.String.min(3).min(5).getInfo("string.min")).toBe(5);
+        expect(types.String.min(5).min(3).getInfo("string.min")).toBe(5);
+        expect(types.String.max(5).min(3).getInfo("string.min")).toBe(3);
+        expect(types.String.min(5).max(3).getInfo("string.min")).toBe(5);
+        expect(types.String.getInfo("string.min")).toBe(undefined);
     });
 });

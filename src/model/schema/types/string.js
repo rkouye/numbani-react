@@ -15,17 +15,21 @@ const string = new Type().extendWithValidators(
 );
 
 string.max = function(length){
-    return this.extendWithValidators(
+    const newType = this.extendWithValidators(
         value => (emptyValue(value) || (validString(value) && value.length<=length))?
         []:[new ValidationError(i18n.t("numbani:validations.string.invalidMaxLength", {value, expected : length, actual : value.length}))]
     );
+    newType.addInfo("string.max", Math.min(newType.getInfo("string.max") || Number.POSITIVE_INFINITY , length));
+    return newType;
 }
 
 string.min = function(length){
-    return this.extendWithValidators(
+    const newType = this.extendWithValidators(
         value => (emptyValue(value) || (validString(value) && value.length>=length))?
         []:[new ValidationError(i18n.t("numbani:validations.string.invalidMinLength", {value, expected : length, actual : value.length}))]
     );
+    newType.addInfo("string.min", Math.max(newType.getInfo("string.min") || Number.NEGATIVE_INFINITY , length));
+    return newType;
 }
 
 export default string;
