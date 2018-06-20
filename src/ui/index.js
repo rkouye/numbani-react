@@ -207,9 +207,9 @@ function makeEntityView(repo, uiLib) {
         getButtonReady= (connectContext)=>{
             return <ActionButton onClick={connectContext.save}>{this.props.children}</ActionButton>
         }
-        getButtonPendingDisabled=()=>{
-            //TODO: Add a param to tell why the Button is pending
-            return <ActionButton pending disabled>{this.props.children}</ActionButton>
+        getButtonBusyDisabled=()=>{
+            //TODO: Add a param to tell why the Button is busy
+            return <ActionButton busy disabled>{this.props.children}</ActionButton>
         }
         getButtonWithValidation = (connectContext) => <Async
                 promise={connectContext.state.validationErrorsPromise}
@@ -247,7 +247,7 @@ function makeEntityView(repo, uiLib) {
                             <Async
                                 promise={connectContext.state.savingPromise}
                                 before={() => this.getButtonWithValidation(connectContext)}
-                                pending={this.buttonPendingDisabled}
+                                pending={this.buttonBusyDisabled}
                                 then={buttonSaveSuccess}
                                 catch={buttonWithSavingErrors}
                             />
@@ -268,7 +268,7 @@ const UI = function (uiLib) {
     /*
         - getControlForType
         - getValidationFeedbackForType
-        - getActionButton (disabled, pending, onClick, children is content)
+        - getActionButton (disabled, busy, onClick, children is content)
         - 
      */
     return {
