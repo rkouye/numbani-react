@@ -10,6 +10,11 @@ import Async from 'react-promise';
 //TODO: Allow component to display information about the context they provide and the one they consume
 
 function makeEntityView(repo, uiLib) {
+
+    const InlineLoadingIndicatior = uiLib.InlineLoadingIndicatior;
+    const ActionButton = uiLib.ActionButton;
+    const AlertError = uiLib.AlertError;
+
     const EntityView = {};
     const EntityViewValueContext = React.createContext();
 
@@ -100,8 +105,8 @@ function makeEntityView(repo, uiLib) {
                 <Async
                     promise={this.state.promise}
                     then={this.props.children}
-                    catch={this.props.renderError || (error => error.toString())} //TODO: Replace by beautiful error display
-                    pending={this.props.renderLoading || "Loading"} //TODO: Replace by library loading animation
+                    catch={this.props.renderError || (error => <AlertError>{error.message || error.toString}</AlertError>)} //TODO: Hum localization ?
+                    pending={this.props.renderLoading || <InlineLoadingIndicatior />} //TODO: Maybe bloc loading indicator ?
                 />
             );
         }
@@ -121,16 +126,16 @@ function makeEntityView(repo, uiLib) {
             layout: PropsTypes.func
         }
 
-        static getInitialState(entityRef){
+        static getInitialState(entityRef) {
             return {
                 entityRef,
-                shared : {}
+                shared: {}
             }
         }
 
         static getDerivedStateFromProps(props, state) {
-            if (props.entityRef !== state.entityRef && state.editedValue) {
-                console.warn("Resetting state on an entity view with pending modification. Make sure this is really what you want to do.");
+            if (props.entityRef !== state.entityRef) {
+                if(state.editedValue) console.warn("Resetting state on an entity view with pending modification. Make sure this is really what you want to do.");
                 return EntityViewConnect.getInitialState(props.entityRef);
             } else return null;
         }
@@ -142,18 +147,18 @@ function makeEntityView(repo, uiLib) {
 
         onChange = (value) => {
             //TODO: Document state available in context
-            this.setState({
+            this.setState((prevState) => ({
                 shared: {
+                    ...prevState.shared,
                     editedValue: value,
                     validationErrorsPromise: repo.validate(value),
-                    savingPromise: undefined //Should we cancel the save or prevent change if there is an ongoing save ?
                 }
-            });
+            }));
         }
 
         save = () => {
-            if(!this.state.shared.editedValue){
-                console.warn("You tried to save while no edit have been made by to the value.")
+            if (!this.state.shared.editedValue) {
+                console.warn("You tried to save although no edit have been made to the value.")
             } else {
                 this.setState((prevState) => ({
                     shared: {
@@ -196,63 +201,73 @@ function makeEntityView(repo, uiLib) {
 
     EntityView.button = {};
 
-    const ActionButton = uiLib.getActionButton();
-
     EntityView.button.save = class EntityViewButtonSave extends Component {
 
-        getButtonDisabled =()=>{
+        static propTypes = {
+            renderError : PropsTypes.func,
+        }
+
+        getButtonDisabled = () => {
             //TODO: Add a param to tell why the Button is disabled
             return <ActionButton disabled>{this.props.children}</ActionButton>
         }
-        getButtonReady= (connectContext)=>{
+        getButtonReady = (connectContext) => {
             return <ActionButton onClick={connectContext.save}>{this.props.children}</ActionButton>
         }
-        getButtonBusyDisabled=()=>{
+        getButtonBusyDisabled = () => {
             //TODO: Add a param to tell why the Button is busy
             return <ActionButton busy disabled>{this.props.children}</ActionButton>
         }
         getButtonWithValidation = (connectContext) => <Async
-                promise={connectContext.state.validationErrorsPromise}
-                before={this.getButtonDisabled}
-                pending={this.getButtonDisabled}
-                then={
-                    validationErrors => {
-                        let validationErrorsCount = 0;
-                        for (let attribute in validationErrors) {
-                            validationErrorsCount += validationErrors[attribute].length;
-                        }
-                        if (validationErrorsCount > 0) {
-                            //TODO: Maybe display info on why it is disabled
-                            return this.getButtonDisabled();
-                        } else {
-                            //TODO: Maybe allow to customize this behavior
-                            if (connectContext.state.editedValue) {
-                                return this.getButtonReady(connectContext);
-                            } else return this.getButtonDisabled();
-                        }
+            promise={connectContext.state.validationErrorsPromise}
+            before={this.getButtonDisabled}
+            pending={this.getButtonDisabled}
+            then={
+                validationErrors => {
+                    let validationErrorsCount = 0;
+                    for (let attribute in validationErrors) {
+                        validationErrorsCount += validationErrors[attribute].length;
+                    }
+                    if (validationErrorsCount > 0) {
+                        //TODO: Maybe display info on why it is disabled
+                        return this.getButtonDisabled();
+                    } else {
+                        //TODO: Maybe allow to customize this behavior
+                        if (connectContext.state.editedValue) {
+                            return this.getButtonReady(connectContext);
+                        } else return this.getButtonDisabled();
                     }
                 }
-            />
+            }
+        />
+
+        getButtonSaveSuccess = (connectContext) => {
+            return this.getButtonReady(connectContext)
+        }
+        
+        getButtonWithSavingError = (connectContext, error) => <React.Fragment>
+            {this.getButtonReady(connectContext)}
+            { (this.props.renderError && this.props.renderError(error)) ||
+                <AlertError>{error.message || error.toString()}</AlertError>
+            }
+        </React.Fragment>
 
         render() {
-            const buttonSaveSuccess = () => "Done !";
-
-            const buttonWithSavingErrors = (errors) => errors.toString();
 
             return (
                 <SingleEntityConnectContext.Consumer>
                     {
                         connectContext =>
-                            connectContext.state.editedValue?
-                            <Async
-                                promise={connectContext.state.savingPromise}
-                                before={() => this.getButtonWithValidation(connectContext)}
-                                pending={this.buttonBusyDisabled}
-                                then={buttonSaveSuccess}
-                                catch={buttonWithSavingErrors}
-                            />
-                            :
-                            this.getButtonDisabled()
+                            connectContext.state.editedValue ?
+                                <Async
+                                    promise={connectContext.state.savingPromise}
+                                    before={() => this.getButtonWithValidation(connectContext)}
+                                    pending={() => this.getButtonBusyDisabled(connectContext)}
+                                    then={() => this.getButtonSaveSuccess(connectContext)}
+                                    catch={(error) => this.getButtonWithSavingError(connectContext, error)}
+                                />
+                                :
+                                this.getButtonDisabled()
 
                     }
                 </SingleEntityConnectContext.Consumer>
@@ -267,9 +282,9 @@ const UI = function (uiLib) {
     //TODO: uiLib interface should have
     /*
         - getControlForType
-        - getValidationFeedbackForType
-        - getActionButton (disabled, busy, onClick, children is content)
-        - 
+        - ActionButton (disabled, busy, onClick, children is content)
+        - InlineLoadingIndicatior
+        - AlertError
      */
     return {
         entity(repo) {
