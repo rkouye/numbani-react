@@ -58,7 +58,7 @@ describe("EntityRepo", ()=>{
             expect(error.validationErrorsCount).toBe(1);
             expect(error.validationErrors.name.length).toBe(0);
             expect(error.validationErrors.organization.length).toBe(1);
-            expect(error.validationErrors.organization[0].message).toBe("validations.required");
+            expect(error.validationErrors.organization[0].message).toBe("numbani:validations.required");
             done();
         });
     });
