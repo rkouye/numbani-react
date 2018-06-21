@@ -1,6 +1,7 @@
 class ValidationError {
-    constructor(message){
+    constructor(message, info){
         this.message = message;
+        this.info = info;
     }
 }
 
