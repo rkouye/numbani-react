@@ -1,5 +1,4 @@
 import ValidationError from "./ValidationError";
-import i18n from "i18next";
 /**
  * 
  * 
@@ -42,7 +41,13 @@ import i18n from "i18next";
     getInfo(name){
         return this.info[name];
     }
-
+    /**
+     *
+     *
+     * @param {*} value
+     * @returns {Array.<ValidationError>}
+     * @memberof Type
+     */
     getValidationErrors(value){
         return [];
     }
@@ -81,7 +86,7 @@ import i18n from "i18next";
     required(){
         return this.extendWithValidators(
             value => (value !== null && value !== undefined)?
-            []:[new ValidationError(i18n.t("numbani:validations.required", {value}))]
+            []:[new ValidationError("numbani:validations.required", {value})]
         );
     }
 

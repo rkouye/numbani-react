@@ -1,12 +1,8 @@
 import types from './'
 import { Type } from './Type';
-import i18next from "i18next";
 import expect from 'expect';
 
 describe("Types", ()=>{
-    before(()=>{
-        return i18next.init({lng: 'cimode'});
-    });
     
     it('type inheritance', ()=>{
         expect(types.String.doExtends(new Type())).toBe(false);

@@ -2,7 +2,6 @@ import EntityManagerBuilder from '../EntityManagerBuilder';
 import EntitySchemaBuilder from '../schema/EntitySchemaBuilder';
 import Persistence from '../persistence/Persistence';
 import Types from '../schema/types';
-import i18next from "i18next";
 import expect, { createSpy } from 'expect';
 
 describe("EntityRepo", ()=>{
@@ -18,10 +17,6 @@ describe("EntityRepo", ()=>{
             return this.cache[name];
         }
     };
-    
-    before(()=>{
-        return i18next.init({lng: 'cimode'});
-    });
     
     it('saves', () =>{
         const mockPersistence = new MockPersistence();
