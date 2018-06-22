@@ -1,5 +1,6 @@
 import types from '../../../model/schema/types';
 import React, { Component } from 'react';
+import PropsTypes from 'prop-types';
 import Spinner from 'react-spinkit';
 import { Alert, FormFeedback, Input, Button } from 'reactstrap';
 import './fix.css';
@@ -58,9 +59,15 @@ class InlineSpinner extends Component {
 }
 
 class BootstrapAlertError extends Component {
+    static propTypes = {
+        error : PropsTypes.instanceOf(Error).isRequired,
+        localize : PropsTypes.bool
+    }
+
     render() {
         return (
-            <Alert color="danger">{this.props.children}</Alert>
+            //TODO : Add localization
+            <Alert color="danger">{this.props.error.message || this.props.error.toString()}</Alert>
         );
     }
 }

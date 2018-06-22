@@ -105,7 +105,7 @@ function makeEntityView(repo, uiLib) {
                 <Async
                     promise={this.state.promise}
                     then={this.props.children}
-                    catch={this.props.renderError || (error => <AlertError>{error.message || error.toString}</AlertError>)} //TODO: Hum localization ?
+                    catch={this.props.renderError || (error => <AlertError error={error} localize />)}
                     pending={this.props.renderLoading || <InlineLoadingIndicatior />} //TODO: Maybe bloc loading indicator ?
                 />
             );
@@ -248,7 +248,7 @@ function makeEntityView(repo, uiLib) {
         getButtonWithSavingError = (connectContext, error) => <React.Fragment>
             {this.getButtonReady(connectContext)}
             { (this.props.renderError && this.props.renderError(error)) ||
-                <AlertError>{error.message || error.toString()}</AlertError>
+                <AlertError error={error} localize />
             }
         </React.Fragment>
 
@@ -284,7 +284,7 @@ const UI = function (uiLib) {
         - getControlForType
         - ActionButton (disabled, busy, onClick, children is content)
         - InlineLoadingIndicatior
-        - AlertError
+        - AlertError (error {type error) , localize boolean)
      */
     return {
         entity(repo) {
