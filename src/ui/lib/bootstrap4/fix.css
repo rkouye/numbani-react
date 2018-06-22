@@ -1,3 +1,10 @@
 .numbani-uilib-inline-spinner{
     color: inherit;
+    display: inline-block;
+    margin-left: .5em;
+    margin-right: .5em;
+}
+.numbani-uilib-inline-spinner>div{
+    height: .7em;
+    width: .7em;
 }
