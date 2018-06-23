@@ -28,19 +28,19 @@ class Login extends Component {
 
 }
 
+
 Login.propTypes = {
     /**
-     * This component require you to import your own firebaseui for localization purpose
-     * Don't forget to import 'firebaseui/dist/firebaseui.css' if you want styling
+     * An instance of firebaseui.
      */
     firebaseui : PropTypes.object.isRequired,
     /**
-     * instanceOf(firebase.auth.Auth)
-     * Do firebase.auth()
+     * An instance of firebase.auth.Auth;
+     * After importing firebase and firebase.auth you can get one by calling firebase.auth()
      */
     firebaseAuth : PropTypes.object.isRequired,
     /** 
-     *  See https://github.com/firebase/firebaseui-web#configuration
+     *  FirebaseUI config object. More information here : {@link https://github.com/firebase/firebaseui-web#configuration}
      */
     uiConfig : PropTypes.object.isRequired
 };
