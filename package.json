@@ -11,9 +11,10 @@
     "umd"
   ],
   "scripts": {
-    "build": "nwb build-react-component --keep-proptypes",
+    "build": "nwb build-react-component --keep-proptypes --no-demo",
     "clean": "nwb clean-module && nwb clean-demo",
-    "start": "nwb serve-react-demo",
+    "dev": "docz dev",
+    "build-doc": "docz build",
     "test": "nwb test-react",
     "test:coverage": "nwb test-react --coverage",
     "test:watch": "nwb test-react --server"
@@ -35,6 +36,8 @@
   "devDependencies": {
     "babel-eslint": "^7.2.3",
     "babel-polyfill": "^6.26.0",
+    "css-loader": "^0.28.11",
+    "docz": "^0.2.11",
     "eslint": "^4.19.1",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-flowtype": "^2.49.3",
@@ -45,9 +48,11 @@
     "firebaseui": "^3.0.0",
     "nwb": "0.21.x",
     "react": "^16.4.0",
-    "react-dom": "^16.4.0"
+    "react-dom": "^16.4.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.12.0"
   },
-  "author": "numbani",
+  "author": "semako-kouye",
   "homepage": "https://github.com/numbani/numbani-react",
   "license": "MIT",
   "repository": "https://github.com/numbani/numbani-react",
