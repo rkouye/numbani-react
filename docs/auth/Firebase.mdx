@@ -120,6 +120,15 @@ authService.signOut(); //Return a promise that resolve when the user is logged o
 
 If you want to *inject* user information into a React Component, the recommended way to do it, is to use the **AuthServiceProvider** and **AuthServiceConsumer** components.
 
+You can import them like this :
+
+```javascript
+
+import { AuthServiceProvider, AuthServiceConsumer } from 'numbani-react/lib/ui/auth/AuthService';
+import FirebaseAuth from 'numbani-react/lib/auth/provider/FirebaseAuth';
+
+```
+
 Here is an example :
 
 <Playground>

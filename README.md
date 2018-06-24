@@ -4,13 +4,39 @@
 [![npm package][npm-badge]][npm]
 [![Coveralls][coveralls-badge]][coveralls]
 
-Prototype faster 🌠.
+Numbani-React is a library for fast 🌠 web apps prototyping (think MVP or PoC).
+
+It is built upon an interesting concept : **end user intent centric UI framework**.
+
+This means that the library provide React components to match **user intent** : Login, Display Entity, Edit Entity, Monitor Progress, Start Task etc...
+
+[Read the documentation](https://numbani-react.netlify.com).
+
+## Installation
+
+```shell
+
+npm i numbani-react
+
+```
+
+or
+
+```shell
+
+yarn add numbani-react
+
+```
+
+## Contributors
+
+[Semako KOUYE](https://github.com/semako-kouye)
 
 [build-badge]: https://img.shields.io/travis/numbani/numbani-react/master.svg
 [build]: https://travis-ci.org/numbani/numbani-react
 
-[npm-badge]: https://img.shields.io/npm/v/npm-package.svg?style=flat-square
-[npm]: https://www.npmjs.org/package/npm-package
+[npm-badge]: https://img.shields.io/npm/v/numbani-react.svg
+[npm]: https://www.npmjs.org/package/numbani-react
 
 [coveralls-badge]: https://img.shields.io/coveralls/numbani/numbani-react/master.svg
 [coveralls]: https://coveralls.io/github/numbani/numbani-react
