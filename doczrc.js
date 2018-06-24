@@ -1,7 +1,8 @@
 export default {
     source: "./docs",
-    title: "Numbani-react",
+    title: "numbani-react",
     description: "A React library for fast prototyping. Contains useful helper for Firebase and Bootstrap.",
+    indexHtml : "docs/index.html",
     modifyBundlerConfig: (config) => {
         config.module.rules.push({
             test: /\.css$/,

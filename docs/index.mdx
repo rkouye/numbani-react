@@ -4,23 +4,55 @@ route : /
 order : 1
 ---
 
+import { Link } from 'docz';
+
 # Getting started
 
-Numbani-React is a library for fast prototyping.
+## About
 
-It is primarily made to be used for building a PoC or MVP.
+Numbani-React is a library for fast 🌠 web apps prototyping (think MVP or PoC).
 
-It can still be an helpful toolbox in the final product.
+It try to gather **most of the things** you will need in **one place** with **zero config**.
 
-We take advantage of existing tools (Firebase as back end, Bootstrap for UI...) and gather most of the things
-you will need to build a web platform in one place.
+*Do not worry about bundle size, if you use webpack as bundler you can still import only what you need.*
 
-*So far we have only implemented Firebase as back end and Bootstrap for UI, we are hoping to add more options in a near future.*
+Even if built with PoC or MVP in mind, the abstraction numbani-react offers can still be useful in final product.
 
-Here is a list of use case the library covers :
+**Demo** : (TODO) list of web apps built entirely with numbani-react and how long it took to build them.
 
-- User authentication (really easy to set up using Firebase authentication for example)
-- Data management (for example using Firestore you can CRUD your data easily, also support polling and advanced queries )
-- Data validation ( ready to use data validation, example, define an attribute like user.name as required )
-- UI Kit ( the library provide ui component to edit many data type and simplify form design by leveraging React Context)
+## Installation
+
+
+
+## Usage
+
+The library focus on high level use case. For example, you won't find a date picker component, but you will have a date picker created for you when you use the EntityView component to edit an attribute of type *date*. This date picker may be implemented using momentjs today, and switched later into something the community find better.
+
+The point is **numbani-react** only export **user centric** components. Each components available have to match an **user intent** : Login, Display Entity, Edit Entity, Monitor Progress, Start Task ...
+
+Here is a list of intent categories the library covers (some of these are not ready yet 😅):
+
+- <Link to="/docs-auth-firebase">Authentication</Link> (Login, Logout, Get user info, Edit user info...)
+- Data (Display entity, Sync entity, Queries, Edit Entity...)
+- Task (Start task, Monitor Progress, Cancel Task ...)
 - All this work out the box, nearly zero config !
+
+Here is what is not included in this library, cause it is simpler to use them outside :
+
+- Routing, check [React-router](https://github.com/ReactTraining/react-router) instead
+- Localization, check *i18next* or *react-intl*
+- Raw UI component (for example Button), check *Bootstrap*, *Material UI*...
+
+## Backend
+
+Web apps need a Backend to allow functionality like Authentication. We have provided integration for **Firebase** as Backend, but you can also implement yours, and even share it with us.
+
+## Frontend UI lib
+
+To make our intents components we use internally *Bootstrap 4 and Reactstrap*. And soon you could choose *Material UI* instead. But you can also implement yours and replace it.
+
+## One last thing
+
+We take advantage of existing tools, and inspired by *Create-react-app*, our philosophy is to pick the best known option (or one of the best if there is many) so you are ready to go. But we also don't want to lock you in, so it is actually easy to replace anything.
+
+It is open source and contributions are welcome, if you think we are doing something wrong tell us !
