@@ -1,6 +1,6 @@
 {
   "name": "numbani-react",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A React library for fast prototyping",
   "main": "lib/index.js",
   "module": "es/index.js",
