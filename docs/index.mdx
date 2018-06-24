@@ -45,11 +45,15 @@ yarn add numbani-react
 
 ## Usage
 
-The library focus on high level use case. For example, you won't find a date picker component, but you will have a date picker created for you when you use the EntityView component to edit an attribute of type *date*. This date picker may be implemented using momentjs today, and switched later into something the community find better.
+The library provide you **user centric** components. Each components available match an **user intent** : Login, Display Entity, Edit Entity, Monitor Progress, Start Task ...
 
-The point is **numbani-react** only export **user centric** components. Each components available have to match an **user intent** : Login, Display Entity, Edit Entity, Monitor Progress, Start Task ...
+Using numbani-react to build your web apps means :
 
-Here is a list of intent categories the library covers (some of these are not ready yet 😅):
+1. Define what end users can do on your web app
+2. Find if there is a component in the library to implement it (stay generic)
+3. Profit 😅
+
+Here is a list of intent categories the library covers (some of these are not ready yet):
 
 - <Link to="/docs-auth-firebase">Authentication</Link> (Login, Logout, Get user info, Edit user info...)
 - Data (Display entity, Sync entity, Queries, Edit Entity...)

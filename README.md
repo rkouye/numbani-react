@@ -6,7 +6,7 @@
 
 Numbani-React is a library for fast 🌠 web apps prototyping (think MVP or PoC).
 
-It is built upon an interesting concept : **end user intent centric UI framework**.
+It is built upon an interesting concept : **end user intent centric framework**.
 
 This means that the library provide React components to match **user intent** : Login, Display Entity, Edit Entity, Monitor Progress, Start Task etc...
 
