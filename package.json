@@ -1,6 +1,6 @@
 {
   "name": "numbani-react",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "A React library for fast prototyping",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -12,6 +12,8 @@
   ],
   "scripts": {
     "build": "nwb build-react-component --keep-proptypes --no-demo",
+    "prepublish": "npm clean && npm build",
+    "release" : "np",
     "clean": "nwb clean-module && nwb clean-demo",
     "dev": "docz dev",
     "build-doc": "docz build",
@@ -46,6 +48,7 @@
     "eslint-plugin-react": "^7.9.1",
     "firebase": "^5.0.4",
     "firebaseui": "^3.0.0",
+    "np": "^3.0.4",
     "nwb": "0.21.x",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
