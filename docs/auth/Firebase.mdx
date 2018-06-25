@@ -21,7 +21,7 @@ If you are using Firebase Authentication, there is a **Login** component availab
         firebaseui={firebaseui} 
         firebaseAuth={firebase.auth()}
         uiConfig={{
-            signInSuccessUrl : '#', // Redirect here
+            signInSuccessUrl : '#/docs-auth-firebase', // Redirect here
             signInOptions: [
                 firebase.auth.PhoneAuthProvider.PROVIDER_ID,
                 firebase.auth.GoogleAuthProvider.PROVIDER_ID
