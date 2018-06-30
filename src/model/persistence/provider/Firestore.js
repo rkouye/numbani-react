@@ -8,7 +8,7 @@ const m_getRef = Symbol("Method get firestore ref");
 
 //FIXME: Use a custom ref and add a ref builder
 class FirestorePersistence extends Persistence {
-    constructor(db, { mapDocId }){
+    constructor(db, { mapDocId }={}){
         super();
         this[f_db] = db;
         if(mapDocId && typeof mapDocId !== "function")
