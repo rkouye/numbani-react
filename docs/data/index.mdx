@@ -8,9 +8,9 @@ import { Link } from 'docz';
 
 # Concepts
 
-Numbani-react take the assumption that data related actions (display, edit, delete), could be reduced to **CRUD** (**C**reate, **R**ead, **U**pdate and **D**elete) operations on **entities** (also called models).
+Numbani-react take the assumption that data related actions (display, edit, delete), could be reduced to **CRUD** (**C**reate, **R**ead, **U**pdate and **D**elete) operations on **entities**.
 
-Examples of entities are *Car*, *Invoice* and *Customer*. And the value `{ brand : "Toyota" , color : "red" }` is an example *Car* instance. (More on this later).
+Examples of entities are *Cars*, *Invoices* and *Customers*. The value `{ brand : "Toyota" , color : "red" }` is an entity of type *Car*.
 
 Thus, to make it easier to manage data in your web app, we provide you the **EntityManager** abstraction.
 
@@ -28,7 +28,7 @@ Numbani-react ships :
 
 - <Link to="/docs-model-provider-localstorage">LocalStorage Persitence Provider</Link> (TODO)
 
-- <Link to="/docs-model-provider-transient">Transient Persitence Provider</Link> (TODO)
+- <Link to="/docs-model-provider-inmemory">In memory Persitence Provider</Link> (TODO)
 
 ### EntityManagerBuilder
 
@@ -56,11 +56,9 @@ const entityManager = new EntityManagerBuilder()
 
 ```
 
-## Entity
+## Entities
 
-Once you have an entity manager, next step is to add some entities... and well manage them 😄.
-
-To create an entity, you have to define its schema.
+Once you have an entity manager, next step is to manage some entities 😄.
 
 ### EntitySchema
 
@@ -90,11 +88,11 @@ You can have more information on the various type available here. (TODO)
 
 You can now register your entity schema in the entity manager. This operation returns an **EntityRepo** object.
 
-You can use the entity repository object to read, save or delete entity value directly.
+You will then use the entity repository object to read, save or delete entity value directly.
 
 ```javascript
 
-const carsRepo = entityManager.buildEntity("cars", { schema: carSchema });
+const carsRepo = entityManager.register("cars", { schema: carSchema });
 
 carsRepo.save({ brand : "Toyota" , color : "red" }).then( ref => console.log(`New car saved at ref : ${ref}`));
 

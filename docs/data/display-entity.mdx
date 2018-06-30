@@ -1,0 +1,124 @@
+---
+name:  Display Data
+menu: Data
+---
+
+import { Playground, Link, PropsTable } from 'docz';
+
+# Display data
+
+How to use numbani-react to display data (stored in your back end) to users ?
+
+## Prerequisite
+
+- <Link to="docs-data-index#entity">You need an entity repository (EntityRepo) object.</Link>
+
+## Create EntityView
+
+An EntityView is an object that contains react components you can use to display data related to an entity.
+
+Example using Firestore as persistence provider and Bootstrap 4 as UI provider :
+
+```javascript
+import EntityManagerBuilder from "numbani-react/lib/model/EntityManagerBuilder";
+import FirestorePersistence from "numbani-react/lib/model/persistence/provider/Firestore";
+
+import EntitySchemaBuilder from "numbani-react/lib/model/schema/EntitySchemaBuilder";
+import types from "numbani-react/lib/model/schema/types";
+
+import firebase from "firebase/app";
+import "firebase/firestore"; // Required for side effect
+
+import bootstrap4UiLib from "numbani-react/lib/ui/lib/bootstrap4";
+import "bootstrap/dist/css/bootstrap.min.css"; // So we could have bootstrap theme, you can replace this by a custom build.
+
+import UI from "numbani-react/lib/ui";
+
+const config = {
+  /* PUT YOUR FIREBASE CONFIG HERE */
+};
+
+firebase.initializeApp(config);
+
+const db = firebase.firestore();
+
+const entityManager = new EntityManagerBuilder()
+  .withPersistenceProvider(new FirestorePersistence(db))
+  .build();
+
+const heroSchema = new EntitySchemaBuilder()
+  .addAttribute(
+    "alias",
+    types.String.required()
+      .min(1)
+      .max(255)
+  )
+  .build();
+
+const heroesRepo = entityManager.register("heroes", { schema: heroSchema }); // <<<<< Here we have our EntityRepo
+
+const HeroView = UI(bootstrap4UiLib).forRepo(heroesRepo); //<<<<< And then we build the EntityView
+```
+
+import {HeroView, db} from './displayEntitySetup';
+
+## Use your EntityView
+
+### Display one value
+
+<Playground>
+ <HeroView.one value={{ alias : "Batman"}}>
+    Because I am <HeroView.fields.alias/>.
+ </HeroView.one>
+</Playground>
+
+### Display a list
+
+### Load one value from back end
+
+<Playground>
+ {()=>{
+
+  const flashRef = db.collection("heroes").doc("flash"); // Ref supported by firebase persistence
+  return <HeroView.read entityRef={flashRef}>
+    {
+      flash => 
+        <pre>
+          {JSON.stringify(flash, null, 2)}
+        </pre>
+    }
+  </HeroView.read>;
+}}
+</Playground>
+
+### Load a list of values from back end
+
+<Playground>
+
+ {()=>{
+
+  const heroesRef = db.collection("heroes"); // Ref supported by firebase persistence
+  return <HeroView.read entityRef={heroesRef}>
+    {
+     heroes =>
+      <pre>
+           {JSON.stringify(heroes, null, 2)}
+      </pre>
+    }
+  </HeroView.read>;
+}}
+</Playground>
+
+### Load one value from the back end and display it
+
+<Playground>
+ {()=>{
+
+  const batmanRef = db.collection("heroes").doc("batman"); // Ref supported by firebase persistence
+
+  return <HeroView.connect entityRef={batmanRef}>
+  Because I am <HeroView.fields.alias/>.
+  </HeroView.connect>;
+
+}}
+</Playground>
