@@ -8,11 +8,11 @@ import { Link } from 'docz';
 
 # Concepts
 
-Numbani-react take the assumption that most actions an user take on your web application, could be reduced to **CRUD** (**C**reate, **R**ead, **U**pdate and **D**elete) operations on **entities** (also called models).
+Numbani-react take the assumption that data related actions (display, edit, delete), could be reduced to **CRUD** (**C**reate, **R**ead, **U**pdate and **D**elete) operations on **entities** (also called models).
 
 Examples of entities are *Car*, *Invoice* and *Customer*. And the value `{ brand : "Toyota" , color : "red" }` is an example *Car* instance. (More on this later).
 
-Thus, to make it easier to build web app, we provide you the **EntityManager** abstraction.
+Thus, to make it easier to manage data in your web app, we provide you the **EntityManager** abstraction.
 
 ## EntityManager
 
@@ -20,7 +20,7 @@ An entity manager is the context in which your entities are created, read, updat
 
 ### PersistenceProvider
 
-The persistence provider is the underlying backend that allow you to persist your data (entities).
+The persistence provider is the underlying back end that allow you to persist your data (entities).
 
 Numbani-react ships :
 
