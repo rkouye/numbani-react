@@ -287,7 +287,7 @@ const UI = function (uiLib) {
         - AlertError (error {type error) , localize boolean)
      */
     return {
-        entity(repo) {
+        forRepo(repo) {
             return makeEntityView(repo, uiLib);
         }
     }
