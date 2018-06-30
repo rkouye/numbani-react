@@ -24,7 +24,7 @@ export class EntityManager {
      * @returns {EntityRepo}
      * @memberof EntityManager
      */
-    buildEntity(name, {schema, behaviours}){
+    register(name, {schema, behaviours}){
         if(!(schema instanceof EntitySchema))
             throw new Error("entitySchema isn't an instance of class numbani/model/EntitySchema");
 
