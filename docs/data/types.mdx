@@ -1,0 +1,40 @@
+---
+name:  Types
+menu: Data
+---
+
+import { Playground, Link, PropsTable } from 'docz';
+
+# Types
+
+The most important part of the data management capabilities provided by numbani-react, come from the various data types allowed.
+
+This is important because, for each data types : 
+ - Persistence provider automatically handles saving and reading on the back end
+ - UI Components are available to display and edit them
+
+## Type inheritance
+
+There are 6 basics data types, from which others data types can inherit. Persistence provider and UI components *should at least support basics types*, and could have more specialized treatment for advanced types.
+
+Basics types actually corresponds to primitive Javascript data types, plus some built-in objects.
+
+Every types can accept null or undefined, and those two are treated as the same.
+
+1. Number
+2. Boolean
+3. String
+4. Date
+5. Array
+
+## All types
+
+### Base : Number
+
+### Base : Boolean
+
+### Base : String
+
+### Base : Date
+
+### Base : Array
