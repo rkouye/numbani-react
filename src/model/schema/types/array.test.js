@@ -19,4 +19,18 @@ describe("Types", ()=>{
             expect(types.Array.accepts("What's upppp")).toBe(false);
         });
     });
+
+    describe("Array.of", ()=>{
+
+        it('its validates string array', ()=>{
+            expect(types.Array.of(types.String).accepts([])).toBe(true);
+            expect(types.Array.of(types.String).accepts(["bidibi", "bobbidi", "boo"])).toBe(true);
+            expect(types.Array.of(types.String).accepts(["answer", 42])).toBe(false);
+        });
+
+        it('its validates only one of multiples types', ()=>{
+            expect(types.Array.of(types.String.min(4),types.String.min(5)).accepts(["123"])).toBe(false);
+            expect(types.Array.of(types.String.min(4),types.String.min(5)).accepts(["1234"])).toBe(true);
+        });
+    });
 });
