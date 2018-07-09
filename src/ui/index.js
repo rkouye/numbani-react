@@ -199,9 +199,9 @@ function makeEntityView(repo, uiLib) {
         }
     }
 
-    EntityView.button = {};
+    EntityView.buttons = {};
 
-    EntityView.button.save = class EntityViewButtonSave extends Component {
+    EntityView.buttons.save = class EntityViewButtonSave extends Component {
 
         static propTypes = {
             renderError : PropsTypes.func,

@@ -24,7 +24,7 @@ const entityManager = new EntityManagerBuilder()
 
 const heroSchema = new EntitySchemaBuilder()
     .addAttribute("alias", types.String.required().min(1).max(255))
-    //  .addAttribute("color", types.Enum.required().oneOf("red", "blue","green","black"))
+    .addAttribute("powers", types.Array.of(types.String).required())
     .build();
 
 const heroesRepo = entityManager.register("heroes", { schema: heroSchema }); // <<<<< Here we have our EntityRepo

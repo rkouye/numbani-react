@@ -2,7 +2,7 @@ import types from '../../../model/schema/types';
 import React, { Component } from 'react';
 import PropsTypes from 'prop-types';
 import Spinner from 'react-spinkit';
-import { Alert, FormFeedback, Input, Button } from 'reactstrap';
+import { Alert, FormFeedback, Input, Button, ListGroup, ListGroupItem  } from 'reactstrap';
 import './fix.css';
 
 /**
@@ -31,7 +31,7 @@ function getControlString(type){
                         <React.Fragment>
                             <Input
                                 type="text" 
-                                value={this.props.value}
+                                value={this.props.value || ""}
                                 onChange={this.handleChange}
                                 valid={this.state.dirty && valueIsValid}
                                 invalid={this.state.dirty && !valueIsValid}
@@ -48,6 +48,52 @@ function getControlString(type){
             );
         }
     }
+}
+
+function getControlArray(type){
+
+    return class ControlArray extends Component {
+
+        onChange = (index) => (newValue) => {
+            this.props.onChange( this.props.value.map( (originalItem,itemIndex) => (index===itemIndex)?newValue:originalItem));
+        }
+
+        typeControlCache = []
+
+        render() {
+            return (
+                <ListGroup>
+                    {
+                        this.props.value.map( (item, index) => {
+
+                            if (!this.typeControlCache[index]){
+                                for ( let itemType of type.getInfo("of") ){
+                                    if( itemType.accepts(item)) {
+                                        this.typeControlCache[index] = bootstrap4UiLib.getControlForType(itemType);
+                                        break;
+                                    }
+                                }
+                                //TODO : Check before if array is valid and display error instead
+                                if(!this.typeControlCache[index]) throw new Error("UI Lib can't render array, no type accepts "+ item);
+                            }
+
+                            const TypeControl = this.typeControlCache[index]
+
+                            return <ListGroupItem key={index}><TypeControl
+                                value={item}
+                                edit={this.props.edit}
+                                onChange={this.onChange(index)}
+                            /></ListGroupItem>
+                        })
+                    }
+                    { this.props.edit && <ListGroupItem>
+                        <Button color="primary" onClick={() => this.props.onChange([...this.props.value, null])}>+</Button>
+                    </ListGroupItem>}
+                </ListGroup>
+            );
+        }
+    }
+    
 }
 //TODO: Allow customisation of the spinner choosing the spinner
 class InlineSpinner extends Component {
@@ -96,7 +142,8 @@ const bootstrap4UiLib = {
 
         if(type.doExtends(types.String))
             control = getControlString(type);
-        
+        if(type.doExtends(types.Array))
+            control = getControlArray(type);
         if(control === null)
             throw new Error(`Type ${type.toString()} not supported in bootstrap ui lib`);
         return control;

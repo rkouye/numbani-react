@@ -47,12 +47,8 @@ const entityManager = new EntityManagerBuilder()
   .build();
 
 const heroSchema = new EntitySchemaBuilder()
-  .addAttribute(
-    "alias",
-    types.String.required()
-      .min(1)
-      .max(255)
-  )
+  .addAttribute("alias",types.String.required().min(1).max(255))
+  .addAttribute("powers", types.Array.of(types.String).required())
   .build();
 
 const heroesRepo = entityManager.register("heroes", { schema: heroSchema }); // <<<<< Here we have our EntityRepo
@@ -79,15 +75,15 @@ import {HeroView, db} from './displayEntitySetup';
 <Playground>
  {()=>{
 
-  const flashRef = db.collection("heroes").doc("flash"); // Ref supported by firebase persistence
-  return <HeroView.read entityRef={flashRef}>
-    {
-      flash => 
-        <pre>
-          {JSON.stringify(flash, null, 2)}
-        </pre>
-    }
-  </HeroView.read>;
+const flashRef = db.collection("heroes").doc("flash"); // Ref supported by firebase persistence
+return <HeroView.read entityRef={flashRef}>
+{
+flash =>
+<pre>
+{JSON.stringify(flash, null, 2)}
+</pre>
+}
+</HeroView.read>;
 }}
 </Playground>
 
@@ -95,17 +91,17 @@ import {HeroView, db} from './displayEntitySetup';
 
 <Playground>
 
- {()=>{
+{()=>{
 
-  const heroesRef = db.collection("heroes"); // Ref supported by firebase persistence
-  return <HeroView.read entityRef={heroesRef}>
-    {
-     heroes =>
-      <pre>
-           {JSON.stringify(heroes, null, 2)}
-      </pre>
-    }
-  </HeroView.read>;
+const heroesRef = db.collection("heroes"); // Ref supported by firebase persistence
+return <HeroView.read entityRef={heroesRef}>
+{
+heroes =>
+<pre>
+{JSON.stringify(heroes, null, 2)}
+</pre>
+}
+</HeroView.read>;
 }}
 </Playground>
 
@@ -114,11 +110,13 @@ import {HeroView, db} from './displayEntitySetup';
 <Playground>
  {()=>{
 
-  const batmanRef = db.collection("heroes").doc("batman"); // Ref supported by firebase persistence
+const batmanRef = db.collection("heroes").doc("batman"); // Ref supported by firebase persistence
 
-  return <HeroView.connect entityRef={batmanRef}>
-  Because I am <HeroView.fields.alias/>.
-  </HeroView.connect>;
+return <HeroView.connect entityRef={batmanRef}>
+I am <HeroView.fields.alias/>.
+<br/>
+My powers are :<HeroView.fields.powers/>
+</HeroView.connect>;
 
 }}
 </Playground>
