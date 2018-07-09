@@ -4,6 +4,14 @@ import ValidationError from "./ValidationError";
 
 const isArray = makePredicate(Array.isArray);
 
+/**
+ * @typedef ArrayType
+ * @property {(...types : Type[]) => ArrayType} of
+ */
+
+ /**
+  * @type {Type & ArrayType}
+  */
 const array = new Type().extendWithValidators(
   value =>
     isEmpty.or(isArray)(value)
@@ -13,7 +21,7 @@ const array = new Type().extendWithValidators(
 
 /**
  * 
- * @param {Array.<Type>} types 
+ * @param {Array.<Type>} types
  */
 array.of = function(...types) {
   const newType = this.extendWithValidators(
@@ -26,7 +34,6 @@ array.of = function(...types) {
         ? []
         : [new ValidationError("numbani:validations.array.invalidElementType", {value, types})]
   );
-  newType.of = undefined; // You can't chain this criteria
   newType.addInfo("of", types);
   return newType;
 };
