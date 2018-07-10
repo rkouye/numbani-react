@@ -95,11 +95,14 @@ function getControlArray(type){
 
                             const TypeControl = this.typeControlCache[index]
 
-                            return <ListGroupItem key={index}><TypeControl
+                            return <ListGroupItem key={index}>
+                            <TypeControl
                                 value={item}
                                 edit={this.props.edit}
                                 onChange={this.onChange(index)}
-                            /></ListGroupItem>
+                            />
+                            {this.props.edit && <Button className="float-right mt-2" color="danger" onClick={() => this.props.onChange(this.props.value.filter((val, pos) => pos!==index))}>-</Button>}
+                            </ListGroupItem>
                         })
                     }
                     { this.props.edit && <ListGroupItem>
