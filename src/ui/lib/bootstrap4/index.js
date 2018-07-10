@@ -15,12 +15,26 @@ function getControlString(type){
     return class ControlString extends Component {
         constructor(props){
             super(props);
-            this.state = { dirty : false };
+            this.state = { dirty : false, focused : false };
+        }
+
+        static getDerivedStateFromProps(props, state){
+            if (!state.focused){
+               return { value : (props.value || "") };
+            }
         }
 
         handleChange = (event) => {
+            this.setState({value : event.target.value , dirty : true});
             this.props.onChange(event.target.value);
-            this.setState({dirty : true});
+        }
+
+        handleFocus = (event) => {
+            this.setState({ focused : true });
+        }
+
+        handleBlur = (event) => {
+            this.setState({ focused : false });
         }
 
         render() {
@@ -30,9 +44,11 @@ function getControlString(type){
                     {this.props.edit?
                         <React.Fragment>
                             <Input
-                                type="text" 
-                                value={this.props.value || ""}
+                                type="text"
+                                value={this.state.value}
                                 onChange={this.handleChange}
+                                onFocus={this.handleFocus}
+                                onBlur={this.handleBlur}
                                 valid={this.state.dirty && valueIsValid}
                                 invalid={this.state.dirty && !valueIsValid}
                             />
