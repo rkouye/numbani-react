@@ -25,6 +25,7 @@
     "bootstrap": "^4.1.1",
     "i18next": "^11.3.2",
     "prop-types": "^15.6.1",
+    "react-numeric-input": "^2.2.3",
     "react-promise": "^2.0.3",
     "react-spinkit": "^3.0.0",
     "reactstrap": "^6.0.1"

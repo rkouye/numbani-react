@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropsTypes from 'prop-types';
 import Spinner from 'react-spinkit';
 import { Alert, FormFeedback, Input, Button, ListGroup, ListGroupItem  } from 'reactstrap';
+import NumericInput from 'react-numeric-input';
 import './fix.css';
 
 /**
@@ -21,7 +22,7 @@ function getControlString(type){
         static getDerivedStateFromProps(props, state){
             if (!state.focused){
                return { value : (props.value || "") };
-            }
+            } else return null;
         }
 
         handleChange = (event) => {
@@ -66,6 +67,60 @@ function getControlString(type){
     }
 }
 
+function getControlNumber(type){
+    return class ControlNumber extends Component{
+        constructor(props){
+            super(props);
+            this.state = { dirty : false, focused : false };
+        }
+
+        static getDerivedStateFromProps(props, state){
+            if (!state.focused){
+               return { value : props.value };
+            } else return null;
+        }
+
+        handleChange = (value) => {
+            this.setState({value , dirty : true});
+            this.props.onChange(value);
+        }
+
+        handleFocus = (event) => {
+            this.setState({ focused : true });
+        }
+
+        handleBlur = (event) => {
+            this.setState({ focused : false });
+        }
+        render(){
+            const valueIsValid = type.accepts(this.props.value);
+            const inputValid = this.state.dirty && valueIsValid;
+            const inputInvalid = this.state.dirty && !valueIsValid;
+            return (
+                <React.Fragment>
+                {this.props.edit?
+                <React.Fragment>
+                    <NumericInput 
+                        value={this.state.value} 
+                        onChange={this.handleChange}
+                        onBlur={this.handleBlur}
+                        onFocus={this.handleFocus}
+                        className={`form-control ${inputValid?'is-valid':''} ${inputInvalid?'is-invalid':''}`}/>
+                    {inputInvalid &&
+                        //TODO: Add localization
+                        type.getValidationErrors(this.props.value).map( error => <FormFeedback style={{ display : "block"}} key={JSON.stringify(error)}>{error.message}</FormFeedback> )
+                    }
+                </React.Fragment>
+                :
+                 (this.props.value || "")
+                }
+                </React.Fragment>
+                
+            );
+        }
+    }
+}
+
 function getControlArray(type){
 
     return class ControlArray extends Component {
@@ -101,7 +156,10 @@ function getControlArray(type){
                                 edit={this.props.edit}
                                 onChange={this.onChange(index)}
                             />
-                            {this.props.edit && <Button className="float-right mt-2" color="danger" onClick={() => this.props.onChange(this.props.value.filter((val, pos) => pos!==index))}>-</Button>}
+                            {this.props.edit && <Button 
+                                className="float-right mt-2"
+                                color="danger"
+                                onClick={() => this.props.onChange(this.props.value.filter((val, pos) => pos!==index))}>-</Button>}
                             </ListGroupItem>
                         })
                     }
@@ -161,10 +219,11 @@ const bootstrap4UiLib = {
 
         if(type.doExtends(types.String))
             control = getControlString(type);
-        if(type.doExtends(types.Array))
+        else if(type.doExtends(types.Array))
             control = getControlArray(type);
-        if(control === null)
-            throw new Error(`Type ${type.toString()} not supported in bootstrap ui lib`);
+        else if(type.doExtends(types.Number))
+            control = getControlNumber(type);
+        else throw new Error(`Type ${type.toString()} not supported in bootstrap ui lib`);
         return control;
     },
 
