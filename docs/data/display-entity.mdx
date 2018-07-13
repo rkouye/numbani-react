@@ -1,5 +1,5 @@
 ---
-name:  Display Data
+name: Display Data
 menu: Data
 ---
 
@@ -8,11 +8,11 @@ import PropsTable from '../utils/DynamicPropsTable';
 
 # Display data
 
-How to use numbani-react to display data (stored in your backend) to users ?
+How to use numbani-react to display data (stored in your backend) to users?
 
 ## Prerequisite
 
-- <Link to="docs-data-index#entity">You need an entity repository (EntityRepo) object.</Link>
+- <Link to="docs-data-concepts">You need an entity repository (EntityRepo) object.</Link>
 
 ## Create EntityView
 
@@ -58,7 +58,7 @@ const heroesRepo = entityManager.register("heroes", { schema: heroSchema }); // 
 const HeroView = UI(bootstrap4UiLib).forRepo(heroesRepo); //<<<<< And then we build the EntityView
 ```
 
-import {HeroView, db, load} from './displayEntitySetup';
+import {HeroView, db} from './displayEntitySetup';
 
 ## Use your EntityView
 
@@ -107,7 +107,7 @@ flash =>
 <br/>
 <br/>
 
-#### Props table of EntityView.Read
+#### Props table of EntityView.read
 
 <PropsTable of={HeroView.read} comments={{
   entityRef : "Specific to your persistence provider and is a reference object to the data to display",
