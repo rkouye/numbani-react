@@ -7,7 +7,7 @@ import { Playground, Link, PropsTable } from 'docz';
 
 # Display data
 
-How to use numbani-react to display data (stored in your back end) to users ?
+How to use numbani-react to display data (stored in your backend) to users ?
 
 ## Prerequisite
 
@@ -17,7 +17,7 @@ How to use numbani-react to display data (stored in your back end) to users ?
 
 An EntityView is an object that contains react components you can use to display data related to an entity.
 
-Example using Firestore as persistence provider and Bootstrap 4 as UI provider :
+For example, using Firestore as persistence provider and Bootstrap 4 as UI provider :
 
 ```javascript
 import EntityManagerBuilder from "numbani-react/lib/model/EntityManagerBuilder";
@@ -49,6 +49,7 @@ const entityManager = new EntityManagerBuilder()
 const heroSchema = new EntitySchemaBuilder()
   .addAttribute("alias",types.String.required().min(1).max(255))
   .addAttribute("powers", types.Array.of(types.String).required())
+  .addAttribute("colors", types.Array.of(types.String).required())
   .build();
 
 const heroesRepo = entityManager.register("heroes", { schema: heroSchema }); // <<<<< Here we have our EntityRepo
@@ -56,43 +57,62 @@ const heroesRepo = entityManager.register("heroes", { schema: heroSchema }); // 
 const HeroView = UI(bootstrap4UiLib).forRepo(heroesRepo); //<<<<< And then we build the EntityView
 ```
 
-import {HeroView, db} from './displayEntitySetup';
+import {HeroView, db, load} from './displayEntitySetup';
 
 ## Use your EntityView
 
-### Display one value
+### Simple data loading
+
+#### Load one value from the backend
+
+To load one value from the backend and display it in React, you can use the **EntityView.read** component.
+For that you need to pass the component a prop named **entityRef**.
+
+The **entityRef** is specific to your persistence provider and is a reference object to the data to display. (See below an example for Firestore).
+
+The component then take as child a function which parameter is the value returned by the backend and which return the component you want to display.
 
 <Playground>
- <HeroView.one value={{ alias : "Batman"}}>
-    Because I am <HeroView.fields.alias/>.
- </HeroView.one>
-</Playground>
-
-### Display a list
-
-### Load one value from back end
-
-<Playground>
- {()=>{
-
-const flashRef = db.collection("heroes").doc("flash"); // Ref supported by firebase persistence
-return <HeroView.read entityRef={flashRef}>
+<HeroView.read entityRef={db.collection("heroes").doc("flash")}>
 {
 flash =>
 <pre>
 {JSON.stringify(flash, null, 2)}
 </pre>
 }
-</HeroView.read>;
-}}
+</HeroView.read>
 </Playground>
 
-### Load a list of values from back end
+By default :
+
+- A loading animation is provided. You can change it by passing a react element in props as **renderLoading**. <Link to="docs-data-example-custom-loader">Example</Link>
+
+- Errors string returned by your persistence provider are displayed. You can configure **bootstrap4UiLib** to translate them.
+Or you can replace it by passing a function as **renderError** props to the component.
+This function should take as input the error returned by the persistence provider and return a react element to display.
+
 
 <Playground>
+<HeroView.read entityRef={db.collection("heroes").doc("dontExist")}>
+{
+flash =>
+<pre>
+{JSON.stringify(flash, null, 2)}
+</pre>
+}
+</HeroView.read>
+</Playground>
 
+#### Props table of EntityView.Read
+
+<PropsTable of={HeroView.read}/>
+
+#### Load a list of values from backend
+
+Same as one value, only difference is that your persistence provider return an array.
+
+<Playground>
 {()=>{
-
 const heroesRef = db.collection("heroes"); // Ref supported by firebase persistence
 return <HeroView.read entityRef={heroesRef}>
 {
@@ -102,21 +122,5 @@ heroes =>
 </pre>
 }
 </HeroView.read>;
-}}
-</Playground>
-
-### Load one value from the back end and display it
-
-<Playground>
- {()=>{
-
-const batmanRef = db.collection("heroes").doc("batman"); // Ref supported by firebase persistence
-
-return <HeroView.connect entityRef={batmanRef}>
-I am <HeroView.fields.alias/>.
-<br/>
-My powers are :<HeroView.fields.powers/>
-</HeroView.connect>;
-
 }}
 </Playground>

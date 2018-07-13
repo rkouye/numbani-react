@@ -1,0 +1,23 @@
+---
+name: Custom loading animation
+menu: Examples
+---
+
+import { Playground} from 'docz';
+
+import {HeroView, db, load} from './displayEntitySetup';
+
+# Custom loading animation
+
+Force reload the page if you didn't see it.
+
+<Playground>
+<HeroView.read entityRef={db.collection("heroes")} renderLoading={<b>Loading...</b>}>
+{
+heroes =>
+<pre>
+{JSON.stringify(heroes, null, 2)}
+</pre>
+}
+</HeroView.read>
+</Playground>
