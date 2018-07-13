@@ -3,7 +3,8 @@ name:  Display Data
 menu: Data
 ---
 
-import { Playground, Link, PropsTable } from 'docz';
+import { Playground, Link } from 'docz';
+import PropsTable from '../utils/DynamicPropsTable';
 
 # Display data
 
@@ -103,24 +104,32 @@ flash =>
 </HeroView.read>
 </Playground>
 
+<br/>
+<br/>
+
 #### Props table of EntityView.Read
 
-<PropsTable of={HeroView.read}/>
+<PropsTable of={HeroView.read} comments={{
+  entityRef : "Specific to your persistence provider and is a reference object to the data to display",
+  children : "Render method, take as input the value returned by your backend",
+  renderError : "Render method, take as input the error returned by your backend",
+  renderLoading : "React node, will be displayed during loading"
+}}/>
+
+<br/>
+<br/>
 
 #### Load a list of values from backend
 
 Same as one value, only difference is that your persistence provider return an array.
 
 <Playground>
-{()=>{
-const heroesRef = db.collection("heroes"); // Ref supported by firebase persistence
-return <HeroView.read entityRef={heroesRef}>
+<HeroView.read entityRef={db.collection("heroes")}>
 {
 heroes =>
 <pre>
 {JSON.stringify(heroes, null, 2)}
 </pre>
 }
-</HeroView.read>;
-}}
+</HeroView.read>
 </Playground>

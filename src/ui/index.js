@@ -81,13 +81,7 @@ function makeEntityView(repo, uiLib) {
     }
 
     EntityView.read = class EntityViewRead extends Component {
-        static propTypes = {
-            entityRef: PropsTypes.object.isRequired,
-            sync: PropsTypes.bool, //TODO: Implement sync
-            children: PropsTypes.func.isRequired,
-            renderError: PropsTypes.func,
-            renderLoading: PropsTypes.element
-        }
+
         constructor(props) {
             super(props);
             this.state = {};
@@ -110,6 +104,14 @@ function makeEntityView(repo, uiLib) {
                 />
             );
         }
+    }
+
+    EntityView.read.propTypes = {
+        entityRef: PropsTypes.object.isRequired,
+        //sync: PropsTypes.bool, //TODO: Implement sync
+        children: PropsTypes.func.isRequired,
+        renderError: PropsTypes.func,
+        renderLoading: PropsTypes.node
     }
 
     const SingleEntityConnectContext = React.createContext();

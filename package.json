@@ -54,6 +54,7 @@
     "firebaseui": "^3.0.0",
     "np": "^3.0.4",
     "nwb": "^0.22.0",
+    "parse-prop-types": "^0.3.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "style-loader": "^0.21.0",
