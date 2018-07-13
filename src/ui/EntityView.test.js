@@ -11,7 +11,7 @@ import UI from '.';
 
 
 const entityManager = new EntityManagerBuilder()
-    .withPersistenceProvider(new Persistence({ cars : { mine : {brand : "Toyota"}}}))
+    .withPersistenceProvider( new Persistence({ initialDB : { cars : { mine : {brand : "Toyota"} } } }) )
     .build();
 
 const carSchema = new EntitySchemaBuilder()
