@@ -3,7 +3,7 @@ import Persistence from "../Persistence";
 class InMemoryPersistence extends Persistence {
     constructor({ initialDB, logger }={}){
         super();
-        this.logger = logger;
+        this.logger = logger || console;
         this.db = initialDB || {};
     }
 
@@ -15,7 +15,7 @@ class InMemoryPersistence extends Persistence {
 
     save(value, at){
         this.db[at] = value;
-        this.logger.log(`${this} : Saved ${value} at ${at}`);
+        this.logger.log(`InMemory : Saved ${JSON.stringify(value)} at ${at}`);
         return Promise.resolve(at);
     }
 
@@ -26,8 +26,8 @@ class InMemoryPersistence extends Persistence {
 
     delete(ref){
         delete this.db[ref];
-        this.logger.log(`${this} : Deleted value at ${ref}`);
-        return Promise.resolve();
+        this.logger.log(`InMemory : Deleted value at ${ref}`);
+        return Promise.resolve(ref);
     }
 }
 
