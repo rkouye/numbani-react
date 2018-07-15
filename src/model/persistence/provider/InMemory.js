@@ -19,8 +19,9 @@ class InMemoryPersistence extends Persistence {
         return Promise.resolve(at);
     }
 
-    read(ref){
-        return Promise.resolve(this.db[ref]);
+    async read(ref){
+        if(this.db[ref] === undefined) throw new Error("Missing value");
+        return this.db[ref];
     }
 
     delete(ref){
