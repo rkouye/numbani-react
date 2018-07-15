@@ -167,7 +167,7 @@ function getControlArray(type){
                         <Button 
                             color="primary"
                             aria-label="Add"
-                            className="mx-2 font-weight-bold"
+                            className="font-weight-bold"
                             onClick={() => this.props.onChange([...(this.props.value || []), null])}>+</Button>
                     </ListGroupItem>}
                 </ListGroup>
@@ -221,9 +221,9 @@ class AttributeBase extends Component {
         const Control = this.state.control;
         const eC = this.props.entityContext;
         return (
-            (eC.editedValue || eC.fetchedValue)?
+            (eC.editedValue || eC.loadedValue)?
             <Control
-                value={(eC.editedValue || eC.fetchedValue)[this.props.name]}
+                value={(eC.editedValue || eC.loadedValue)[this.props.name]}
                 edit={this.props.edit}
                 onChange={this.onChange}
             />
