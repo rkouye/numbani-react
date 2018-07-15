@@ -14,7 +14,7 @@ class DynamicPropsTable extends Component {
         return (
             <table className="table table-hover">
                 <thead>
-                    <tr class="table-primary">
+                    <tr className="table-primary">
                         <th>Props</th>
                         <th>Type</th>
                         <th>Required</th>
@@ -26,7 +26,7 @@ class DynamicPropsTable extends Component {
                         let prop = props[name];
                         return (
                             <tr key={name}>
-                                <td class="table-primary"><b>{name}</b></td>
+                                <td className="table-primary"><b>{name}</b></td>
                                 <td>{prop.type.name} {prop.type.value && prop.type.value.map( v => ' '+v.name)}</td>
                                 <td>{prop.required.toString()}</td>
                                 <td>{this.props.comments && this.props.comments[name]}</td>
