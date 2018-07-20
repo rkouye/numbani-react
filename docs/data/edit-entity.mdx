@@ -130,7 +130,7 @@ Age : {hero.age}
 
 <Link to="/docs-data-types">Discover validation messages of all data types</Link>
 
-## save, isSaving, savingError, saved
+## save, isSaving, savingError, isSaved
 
 <Playground>
 <Entity repo={heroesRepo}
@@ -138,10 +138,10 @@ defaultValue={{ alias : "" }}
 onSave={(ref) => window.alert("Saved at ref "+ref) }
 entityRef="myHero">
 {
-( hero, {isLoading, isValid, isSaving, savingError, saved }, { merge, save }) =>
+( hero, {isLoading, isValid, isSaving, savingError, isSaved }, { merge, save }) =>
 !isLoading && <div>
 <pre>
-{JSON.stringify({isValid, isSaving, savingError, saved}, null, 2)}
+{JSON.stringify({isValid, isSaving, savingError, isSaved}, null, 2)}
 </pre>
 <label>Change your alias : </label>
 <input value={hero.alias} onChange={ event => merge({ alias : event.target.value }) } />
@@ -150,7 +150,7 @@ entityRef="myHero">
 <br/>
 { savingError && savingError.toString()}
 <br/>
-{ saved && "Saved !"}
+{ isSaved && "Saved !"}
 </div>
 }
 </Entity>
@@ -169,16 +169,20 @@ As for displaying data, you can also use shipped components to edit your data.
 
 Examples :
 
-### Bootstrap 4 `<Attribute/>`
+### Bootstrap 4
 
 `<Attribute/>` allows you to edit an entity attribute according to its type.
 Type validation is also included, try using an empty alias or an age below 18.
 
+`<SaveButton/>` allows you to save the edited value into your backend;
+
 ```javascript
 import Attribute from 'numbani-react/lib/ui/bootstrap4/Attribute';
+import SaveButton from 'numbani-react/lib/ui/bootstrap4/SaveButton';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
 ```
 import Attribute from 'numbani-react/lib/ui/bootstrap4/Attribute';
+import SaveButton from 'numbani-react/lib/ui/bootstrap4/SaveButton';
 
 <Playground>
 <Entity repo={heroesRepo}
@@ -191,7 +195,8 @@ defaultValue={{
 <Attribute name="age" edit />
 <b>Your powers :</b>
 <Attribute name="powers" edit/>
-
+<br/>
+<SaveButton>Save</SaveButton>
 </Entity>
 </Playground>
 

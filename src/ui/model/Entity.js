@@ -8,7 +8,7 @@ export const EntityContext = React.createContext();
 /**
  * 
  * @param {Component} Component 
- * @param {string} propName 
+ * @param {string} [propName = entityContext]
  */
 export const injectEntityContext = (Component, propName) => props => (
     <EntityContext.Consumer>
@@ -28,7 +28,7 @@ const initialSavingInfo = {
     savingPromise : null,
     isSaving : false,
     savingError : undefined,
-    saved : false
+    isSaved : false
 }
 class Entity extends Component {
 
@@ -131,24 +131,24 @@ class Entity extends Component {
             this.setState((prevState) => ({
                 editedValue : {...(prevState.editedValue || prevState.loadedValue), ...newValue },
                 ...initialValidationInfo,
-                saved : false
+                isSaved : false
             }));
         },
         set : (newValue)=>{
             this.setState({
                 editedValue : newValue,
                 ...initialValidationInfo,
-                saved : false
+                isSaved : false
             });
         },
         save : ()=>{
             if(!this.state.editedValue){
-                console.warn("You tried to save although no edit have been made to the value. It is a noop, but it means you are doing something wrong");
+                console.warn("You tried to save although no edit have been made to the value. It is a noop, but it means something is wrong");
             } else {
                 const savingPromise = this.props.repo.save(this.state.editedValue, this.props.entityRef);
                 this.setState(prevState => ({savingPromise, isSaving : true}), ()=>{
                     savingPromise.then((ref)=>{
-                        this.setState({...initialSavingInfo, saved : true});
+                        this.setState({...initialSavingInfo, isSaved : true});
                         if(typeof this.props.onSave === 'function') this.props.onSave(ref);
                     }).catch( error => {
                         this.setState({...initialSavingInfo, savingError : error});
@@ -178,7 +178,7 @@ class Entity extends Component {
             savingPromise : this.state.savingPromise,
             isSaving : this.state.isSaving,
             savingError : this.state.savingError,
-            saved : this.state.saved,
+            isSaved : this.state.isSaved,
             // Command
             ...this.commands
         }}>
@@ -193,7 +193,7 @@ class Entity extends Component {
                     // Saving
                     isSaving : this.state.isSaving,
                     savingError : this.state.savingError,
-                    saved : this.state.saved
+                    isSaved : this.state.isSaved
 
                 },
                 this.commands
