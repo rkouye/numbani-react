@@ -127,6 +127,9 @@ class Entity extends Component {
                 Entity.getInitialState(props.repo, props.entityRef, props.defaultValue)
             );
         },
+        reset : ()=>{
+            this.setState({ editedValue : null});
+        },
         merge : (newValue)=>{
             this.setState((prevState) => ({
                 editedValue : {...(prevState.editedValue || prevState.loadedValue), ...newValue },
