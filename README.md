@@ -8,7 +8,7 @@ Numbani-React is a library for fast 🌠 web apps prototyping (think MVP or PoC)
 
 See it as a toolbox to build web apps with React without coding basic stuff again.
 
-The library provide React components for many **end user intent** : Login, Display Data, Edit Data, Monitor Progress, Start Task etc...
+The library provide React components for many goals : Login, Display Data, Edit Data, Monitor Progress, Start Task etc...
 
 [Read the documentation](https://numbani-react.netlify.com).
 
