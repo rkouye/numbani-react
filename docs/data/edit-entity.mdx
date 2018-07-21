@@ -176,13 +176,21 @@ Type validation is also included, try using an empty alias or an age below 18.
 
 `<SaveButton/>` allows you to save the edited value into your backend;
 
+`<SaveAlert/>` allows you to display an alert when the value is saved;
+
+`<ResetButton/>` allows you to reset any edit made to the value;
+
 ```javascript
 import Attribute from 'numbani-react/lib/ui/bootstrap4/Attribute';
 import SaveButton from 'numbani-react/lib/ui/bootstrap4/SaveButton';
+import ResetButton from 'numbani-react/lib/ui/bootstrap4/SaveButton';
+import SavedAlert from 'numbani-react/lib/ui/bootstrap4/SavedAlert';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
 ```
 import Attribute from 'numbani-react/lib/ui/bootstrap4/Attribute';
 import SaveButton from 'numbani-react/lib/ui/bootstrap4/SaveButton';
+import ResetButton from 'numbani-react/lib/ui/bootstrap4/ResetButton';
+import SavedAlert from 'numbani-react/lib/ui/bootstrap4/SavedAlert';
 
 <Playground>
 <Entity repo={heroesRepo}
@@ -196,7 +204,8 @@ defaultValue={{
 <b>Your powers :</b>
 <Attribute name="powers" edit/>
 <br/>
-<SaveButton>Save</SaveButton>
+<SaveButton>Save</SaveButton> <ResetButton>Reset</ResetButton>
+<SavedAlert>Saved ! Reload the page to see.</SavedAlert>
 </Entity>
 </Playground>
 
