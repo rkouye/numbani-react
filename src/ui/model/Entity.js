@@ -68,16 +68,20 @@ class Entity extends Component {
     _loadData(repo, entityRef, defaultValue){
         if(this._loadingPromise){
             //TODO: Cancel here when repo request will be cancellable
+            this._loadingPromise = null;
         }
         const loadingPromise = entityRef?
         (defaultValue?repo.read(entityRef).catch(() => defaultValue):repo.read(entityRef))
         :
         (Promise.resolve(defaultValue));
+        this._loadingPromise = loadingPromise;
 
         this.setState(prevState => ({loadingPromise}), ()=>{
             loadingPromise.then(loadedValue => {
-                this.setState({loadedValue});
-                this._loadingPromise = null;
+                if(this._loadingPromise===loadingPromise){
+                    this.setState({loadedValue});
+                    this._loadingPromise = null;
+                }
             }).catch(ignore => {}); // Ignore here cause Async  already take care of it.
         });
 
@@ -86,20 +90,25 @@ class Entity extends Component {
     _validateData(repo, value){
         if(this._validationPromise){
             //TODO: Cancel here (especially if we use backend validation)
+            this._validationPromise = null;
         }
         const validationPromise = repo.validate(value);
+        this._validationPromise = validationPromise;
         this.setState(prevState => ({validationPromise, isValidating : true}), ()=>{
             validationPromise.then( validationErrors => {
-                let validationErrorsCount = 0;
+                if(this._validationPromise===validationPromise){
+                    let validationErrorsCount = 0;
                     for (let attribute in validationErrors) {
-                    validationErrorsCount += validationErrors[attribute].length;
+                        validationErrorsCount += validationErrors[attribute].length;
+                    }
+                    this.setState({
+                        isValid : validationErrorsCount === 0,
+                        validationErrorsCount,
+                        isValidating : false,
+                        validationErrors
+                    });
+                    this._validationPromise = null;
                 }
-                this.setState({
-                    isValid : validationErrorsCount === 0,
-                    validationErrorsCount,
-                    isValidating : false,
-                    validationErrors
-                });
             });
         });
     }
@@ -118,6 +127,7 @@ class Entity extends Component {
     componentWillUnmount(){
         if(this._loadingPromise){
             //TODO: Cancel here when repo request will be cancellable
+            this._loadingPromise = null;
         }
     }
 
@@ -236,7 +246,7 @@ Entity.propTypes = {
     /** 
      * 
     */
-    entityRef : PropTypes.object,
+    entityRef : PropTypes.any,
     /** 
      * 
     */
@@ -246,7 +256,7 @@ Entity.propTypes = {
      * { isLoading, loadingError, isValid, isValidating, validationErrors,validationErrorsCount, isSaving, savingErrors, isDirty, loadedValue},
      * { set, merge, reload, reset, save, delete })
     */
-    children: PropTypes.func.isRequired,
+    children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
     /** 
      * 
     */
