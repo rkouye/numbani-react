@@ -28,7 +28,7 @@ SavingError.propTypes = {
      * the error and returns the message to display or nothing, in this case
      * the component will try do display the error anyway.
      */
-    children : PropTypes.oneOfType(PropTypes.node, PropTypes.func)
+    children : PropTypes.oneOfType([PropTypes.node, PropTypes.func])
 };
 
 export default SavingError;
