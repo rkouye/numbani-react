@@ -8,7 +8,7 @@ const m_getRef = Symbol("Method get firestore ref");
 
 //FIXME: Use a custom ref and add a ref builder
 class FirestorePersistence extends Persistence {
-    constructor(db, { mapDocId }){
+    constructor(db, { mapDocId }={}){
         super();
         this[f_db] = db;
         if(mapDocId && typeof mapDocId !== "function")
@@ -39,11 +39,14 @@ class FirestorePersistence extends Persistence {
     }
 
     read(ref){
-        return ref.get().then(doc => {
-            // FIXME: Handle query as ref
+        return ref.get().then(snapshot => {
             // FIXME: Translate
-            if(!(doc.exists)) return Promise.reject(new Error("Missing value"));
-            return doc.data();
+            if(snapshot.docs){
+                return snapshot.docs.map(doc => doc.data());
+            } else {
+                if(!(snapshot.exists)) return Promise.reject(new Error("Missing value"));
+                return snapshot.data();
+            }
         });
     }
 

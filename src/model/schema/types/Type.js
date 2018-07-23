@@ -59,7 +59,7 @@ import ValidationError from "./ValidationError";
      * Allow to build a new type by extending an existing one
      *
      * @param {*} validators
-     * @returns
+     * @returns {Type}
      * @memberof Type
      */
     extendWithValidators(...validators){

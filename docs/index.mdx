@@ -1,7 +1,7 @@
 ---
 name: Getting started
 route : /
-order : 1
+order : 1000
 ---
 
 import { Link } from 'docz';
@@ -17,6 +17,10 @@ import { Link } from 'docz';
 ## About
 
 Numbani-React is a library for fast 🌠 web apps prototyping (think MVP or PoC).
+
+See it as a toolbox to build web apps with React without coding basic stuff again.
+
+The library provide React components for many goals : Login, Display Data, Edit Data, Start Task, Monitor Progress etc...
 
 It try to gather **most of the things** you will need in **one place** with **zero config**.
 
@@ -45,26 +49,18 @@ yarn add numbani-react
 
 ## Usage
 
-The library provide you **user centric** components. Each components available match an **user intent** : Login, Display Entity, Edit Entity, Monitor Progress, Start Task ...
-
 Using numbani-react to build your web apps means :
 
 1. Define what end users can do on your web app
 2. Find if there is a component in the library to implement it (stay generic)
 3. Profit 😅
 
-Here is a list of intent categories the library covers (some of these are not ready yet):
+Here is a list of functionality this library covers (some of these are not ready yet):
 
 - <Link to="/docs-auth-firebase">Authentication</Link> (Login, Logout, Get user info, Edit user info...)
-- Data (Display entity, Sync entity, Queries, Edit Entity...)
+- Data (Display data, Sync data, Queries, Edit data...)
 - Task (Start task, Monitor Progress, Cancel Task ...)
 - All this work out the box, nearly zero config !
-
-Here is what is not included in this library, cause it is simpler to use them outside :
-
-- Routing, check [React-router](https://github.com/ReactTraining/react-router) instead
-- Localization, check *i18next* or *react-intl*
-- Raw UI component (for example Button), check *Bootstrap*, *Material UI*...
 
 ## Backend
 
@@ -72,11 +68,9 @@ Web apps need a Backend to allow functionality like Authentication. We have prov
 
 ## Frontend UI lib
 
-To make our intents components we use internally *Bootstrap 4 and Reactstrap*. And soon you could choose *Material UI* instead. But you can also implement yours.
+To make our components we use internally *Bootstrap 4 and Reactstrap*. And soon you could choose *Material UI* instead. But you can also implement yours.
 
 ## One last thing
-
-We take advantage of existing tools, and inspired by *Create-react-app*, our philosophy is to pick the best known option (or one of the best if there is many) so you are ready to go. But we also don't want to lock you in, so it is actually easy to replace anything.
 
 It is open source and contributions are welcome, if you think we are doing something wrong tell us !
 
