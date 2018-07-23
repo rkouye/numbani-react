@@ -4,6 +4,8 @@ menu: Data
 ---
 
 import { Playground, Link, PropsTable } from 'docz';
+import Entity from 'numbani-react/lib/ui/model/Entity';
+import {db, heroesRepo} from 'numbani-react/docs/utils/FirebaseEntityManager';
 
 # Display data
 
@@ -50,90 +52,20 @@ const heroesRepo = entityManager.register("heroes", { schema: heroSchema });
 
 ```
 
-<br/>
-
-## Load data from the backend
-
-<br/>
-
-import {HeroView, heroesRepo, db} from './displayEntitySetup';
-import Entity from 'numbani-react/lib/ui/model/Entity';
-
-<Playground>
-<Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("flash")}>
-{
-(flash, {isLoading}) =>
-<pre>
-{isLoading && <b>Loading...</b>}
-{flash && JSON.stringify(flash, null, 2)}
-</pre>
-}
-</Entity>
-</Playground>
-
-<br/>
-
-The `<Entity/>` component can take as child a function. 
-
-- The **first parameter** is always the **value loaded** from the backend.
-- The **second parameter** contains **information** about the request like `{ isLoading, loadingError }` and others you will discover later
-- The **third parameter** contains **commands** like `{ reload }` and others you will discover later
-
-### Handle error
-
-<Playground>
-<Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("dontExist")}>
-{
-( value, {isLoading, loadingError}, {reload}) =>
-<div>
-{isLoading && <b>Loading...</b>}
-{ loadingError && <b>⛔️ Oups ! {loadingError.message}</b>}
-<br/>
-<button onClick={reload}>Reload</button>
-</div>
-}
-</Entity>
-</Playground>
-
-
-### Display local data
-
-<Playground>
-<Entity repo={heroesRepo} 
-defaultValue={{"alias": "React man",
-  "colors": [],
-  "name": "Youare waitforit Awesome",
-  "powers": [
-    "React prodigy", "JS proficiency"
-  ]}}>
-{
-( hero, {isLoading, loadingError}, {reload}) =>
-<div>
-{isLoading && <b>Loading...</b>}
-{ loadingError && <b>⛔️ Oups ! {loadingError.message}</b>}
-<pre>
-{hero && JSON.stringify(hero, null, 2)}
-</pre>
-<br/>
-<button onClick={reload}>Reload</button>
-</div>
-}
-</Entity>
-</Playground>
-
-Using **defaultValue** also works as a fallback if the entityRef does not exist, which can be useful when creating new entity.
-
-## Extensions
-
 The `<Entity/>` component provide an **EntityContext** that can be used to extends it.
 You can build your own extensions to make development faster. But first, check what is available by default.
 
-### Bootstrap 4 components
+**NOTE**
+
+The following examples use `FirestorePersistenceProvider`, hence the use of `db` for entities references.
+
+
+## Bootstrap 4 components
 
 Here are some extensions components built *mainly* with *Bootstrap 4* (but also **reactstrap**, **react-spinkit**, **react-numeric-input** )
-that can be used with nearly no config in your Entity.
+that can be used with to display your entity.
 
-#### Attribute
+### Attribute
 
 `<Attribute/>` automatically display an entity attribute according to its type.
 
@@ -150,11 +82,8 @@ List of <Attribute name="alias"/>'s powers
 </Entity>
 </Playground>
 
-<br/>
 
-Notice you don't need to pass a function to `<Entity/>` if you are not planning to use the values directly.
-
-#### LoadingError
+### LoadingError
 
 `<LoadingError/>` automatically display loading error if there is any.
 

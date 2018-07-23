@@ -23,4 +23,4 @@ const heroSchema = new EntitySchemaBuilder()
     .addAttribute("powers", types.Array.of(types.String).required())
     .build();
 
-export const heroesRepo = entityManager.register("heroes", { schema: heroSchema }); // <<<<< Here we have our EntityRepo
+export const heroesRepo = entityManager.register("heroes", { schema: heroSchema });

@@ -240,25 +240,32 @@ class Entity extends Component {
 
 Entity.propTypes = {
     /**
-     * 
+     * The EntityRepo where this entity belongs.
     */
     repo : PropTypes.instanceOf(EntityRepo).isRequired,
     /** 
-     * 
+     * The reference of the entity to display or edit. EntityRef are
+     * specific to persistence provider.
     */
     entityRef : PropTypes.any,
     /** 
-     * 
+     * This value will be used if entityRef is not set or if it fails to load 
+     * the entity value from the backend.
     */
     defaultValue : PropTypes.object,
     /**
-     * (value,
-     * { isLoading, loadingError, isValid, isValidating, validationErrors,validationErrorsCount, isSaving, savingErrors, isDirty, loadedValue},
-     * { set, merge, reload, reset, save, delete })
+     * Entity can take either anything that can be rendered or a function.
+     * 
+     * When it is a function, the function will take three parameters, the value loaded,
+     * an object with information (isLoading, isValid...), 
+     * and an object with commands (set, save...).
+     * The function should return anything that can be rendered.
+     * 
+     * Entity also provide an EntityContext that is used by extensions.
     */
     children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
     /** 
-     * 
+     * Callback called each time the value is saved.
     */
    onSave : PropTypes.func
 };

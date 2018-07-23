@@ -3,10 +3,95 @@ name: <Entity/>
 menu: References
 ---
 
-import { Playground, PropsTable } from 'docz';
+import { Link, PropsTable, Playground } from 'docz';
 
 import Entity from 'numbani-react/lib/ui/model/Entity';
+import {db, heroesRepo} from 'numbani-react/docs/utils/FirebaseEntityManager';
+
+# Entity
+
+Before reading this, make sure you have a good understanding of how numbani-react manage data : 
+<Link to="docs-data-concepts">Data/concepts</Link>
+
+## Import
+
+```javascript
+import Entity from 'numbani-react/lib/ui/model/Entity';
+```
 
 ## PropsTable of Entity
 
 <PropsTable of={Entity} />
+
+## Advanced usage
+
+If you chose to pass `<Entity/>` a function as child, you can have more controls over you entity value.
+
+- The **first parameter** is always the **value loaded** from the backend.
+- The **second parameter** contains **information** about the request like 
+`{isLoading, loadingError, loadedValue, isDirty, isValid, validationErrors, isValidating, validationErrorsCount, isSaving, savingError, isSaved}`
+- The **third parameter** contains **commands** like `{reload, reset, set, merge, save}`
+
+**NOTE**
+
+The following examples use `FirestorePersistenceProvider`, hence the use of `db` for entities references.
+
+### Load data from the backend
+
+<Playground>
+<Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("flash")}>
+{
+(flash, {isLoading}, {reload}) =>
+<div>
+<pre>
+{isLoading && <b>Loading...</b>}
+{flash && JSON.stringify(flash, null, 2)}
+</pre>
+<button onClick={reload}>Reload</button>
+</div>
+}
+</Entity>
+</Playground>
+
+### Handle error
+
+<Playground>
+<Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("dontExist")}>
+{
+( value, {isLoading, loadingError}, {reload}) =>
+<div>
+{isLoading && <b>Loading...</b>}
+{ loadingError && <b>⛔️ Oups ! {loadingError.message}</b>}
+<br/>
+<button onClick={reload}>Reload</button>
+</div>
+}
+</Entity>
+</Playground>
+
+### Display local data
+
+<Playground>
+<Entity repo={heroesRepo} 
+defaultValue={{"alias": "React man",
+  "colors": [],
+  "name": "Youare waitforit Awesome",
+  "powers": [
+    "React prodigy", "JS proficiency"
+  ]}}>
+{
+( hero, {isLoading, loadingError}, {reload}) =>
+<div>
+{isLoading && <b>Loading...</b>}
+{ loadingError && <b>⛔️ Oups ! {loadingError.message}</b>}
+<pre>
+{hero && JSON.stringify(hero, null, 2)}
+</pre>
+<br/>
+<button onClick={reload}>Reload</button>
+</div>
+}
+</Entity>
+</Playground>
+
+Using **defaultValue** also works as a fallback if the entityRef does not exist, which can be useful when creating new entity.
