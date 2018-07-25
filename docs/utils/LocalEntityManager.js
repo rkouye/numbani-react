@@ -16,7 +16,7 @@ const heroSchema = new EntitySchemaBuilder()
     .addAttribute("powers", types.Array.of(types.String.required().min(1)))
     .build();
 
-export const heroesRepo = entityManager.register("heroes", { schema: heroSchema });
+export const localHeroesRepo = entityManager.register("heroes", { schema: heroSchema });
 
 export const defaultHero = {"alias": "React man",
   "age" : 0,

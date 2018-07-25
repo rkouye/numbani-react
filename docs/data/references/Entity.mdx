@@ -25,18 +25,20 @@ import Entity from 'numbani-react/lib/ui/model/Entity';
 
 ## Advanced usage
 
-If you chose to pass `<Entity/>` a function as child, you can have more controls over you entity value.
+You can pass `<Entity/>` a function as child.
+
+This function takes three parameters.
 
 - The **first parameter** is always the **value loaded** from the backend.
 - The **second parameter** contains **information** about the request like 
 `{isLoading, loadingError, loadedValue, isDirty, isValid, validationErrors, isValidating, validationErrorsCount, isSaving, savingError, isSaved}`
 - The **third parameter** contains **commands** like `{reload, reset, set, merge, save}`
 
-**NOTE**
+## Load data
 
 The following examples use `FirestorePersistenceProvider`, hence the use of `db` for entities references.
 
-### Load data from the backend
+### isLoading and reload
 
 <Playground>
 <Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("flash")}>
@@ -95,3 +97,94 @@ defaultValue={{"alias": "React man",
 </Playground>
 
 Using **defaultValue** also works as a fallback if the entityRef does not exist, which can be useful when creating new entity.
+
+## Edit data
+
+The following examples use `LocalStoragePersistenceProvider`, your data is saved in your browser's local storage.
+
+import {localHeroesRepo} from 'numbani-react/docs/utils/LocalEntityManager';
+
+### Set, Merge
+
+You can then use the commands `{set, merge}` to update the value *locally*.
+(*set* replace the whole value, while *merge* performs merge update.)
+
+
+<Playground>
+<Entity repo={localHeroesRepo} 
+defaultValue={{}}>
+{
+( hero, {isLoading, loadingError}, { set , merge }) =>
+isLoading? <b>Loading...</b> : (<div>
+<pre>
+{JSON.stringify(hero, null, 2)}
+</pre>
+<label>Change your alias : </label>
+<input value={hero.alias} onChange={ event => merge({ alias : event.target.value }) } />
+</div>
+)
+}
+</Entity>
+</Playground>
+
+## Validate data
+
+### isValidating, isValid, validationErrors, validationErrorsCount
+
+Your entities are validated according to the schema you defined and you can have access to the current validation state.
+It is included as information `{isValidating, isValid, validationErrors,validationErrorsCount }`.
+
+Remember we defined `.addAttribute("age", types.Number.required().min(18))`, try it :
+
+<Playground>
+<Entity repo={localHeroesRepo}
+defaultValue={{ alias : "" , age : 0 }}>
+{
+( hero, {isLoading, isValidating, isValid, validationErrors, validationErrorsCount}, { merge }) =>
+!isLoading && <div>
+<b>Validation information</b>
+<pre>
+{JSON.stringify({isValidating, isValid, validationErrors, validationErrorsCount}, null, 2)}
+</pre>
+<label>Change your alias : </label>
+<input value={hero.alias} onChange={ event => merge({ alias : event.target.value }) } />
+<br/>
+Age : {hero.age}
+<br/>
+<button onClick={()=>merge({age : hero.age+10})}>+10</button>
+<button onClick={()=>merge({age : hero.age-10})}>-10</button>
+</div>
+}
+</Entity>
+</Playground>
+
+
+<Link to="/docs-data-types">Discover validation messages of all data types</Link>
+
+## Save data
+
+### save, isSaving, savingError, isSaved, onSave
+
+<Playground>
+<Entity repo={localHeroesRepo}
+defaultValue={{ alias : "" }}
+onSave={(ref) => window.alert("Saved at ref "+ref) }
+entityRef="myHero">
+{
+( hero, {isLoading, isValid, isSaving, savingError, isSaved }, { merge, save }) =>
+!isLoading && <div>
+<pre>
+{JSON.stringify({isValid, isSaving, savingError, isSaved}, null, 2)}
+</pre>
+<label>Change your alias : </label>
+<input value={hero.alias} onChange={ event => merge({ alias : event.target.value }) } />
+<br/>
+{ isValid?<button onClick={save}>Save</button>:"Not valid"}
+<br/>
+{ savingError && savingError.toString()}
+<br/>
+{ isSaved && "Saved !"}
+</div>
+}
+</Entity>
+</Playground>

@@ -4,6 +4,8 @@ menu: Data
 ---
 
 import { Playground, Link } from 'docz';
+import Entity from 'numbani-react/lib/ui/model/Entity';
+import {localHeroesRepo} from 'numbani-react/docs/utils/LocalEntityManager';
 
 # Edit data
 
@@ -14,162 +16,7 @@ How to use numbani-react for editing and saving data (in your backend)?
 - <Link to="docs-data-concepts">You need an entity repository (EntityRepo) object.</Link>
 - <Link to="docs-data-display-entity">Learn how to display data.</Link>
 
-## Edit data locally
-
-The `<Entity/>` component can be used to edit data.
-
-First build your **EntityRepo** object.
-
-Example using in memory persistence provider. (TODO : replace by local storage)
-
-```javascript
-
-import EntityManagerBuilder from 'numbani-react/lib/model/EntityManagerBuilder';
-import InMemory from 'numbani-react/lib/model/persistence/provider/InMemory';
-
-import EntitySchemaBuilder from 'numbani-react/lib/model/schema/EntitySchemaBuilder';
-import types from 'numbani-react/lib/model/schema/types';
-
-
-const entityManager = new EntityManagerBuilder()
-    .withPersistenceProvider(new InMemory())
-    .build();
-
-const heroSchema = new EntitySchemaBuilder()
-    .addAttribute("alias", types.String.required().min(1).max(255))
-    .addAttribute("age", types.Number.min(18))
-    .addAttribute("powers", types.Array.of(types.String.required().min(1)))
-    .build();
-
-export const heroesRepo = entityManager.register("heroes", { schema: heroSchema });
-
-export const defaultHero = {
-  "alias": "React man",
-  "age" : 0,
-  "colors": [],
-  "name": "Youare waitforit Awesome",
-  "powers": ["React prodigy", "JS proficiency"]
-};
-
-```
-<br/>
-
-import { heroesRepo, defaultHero } from './editEntitySetup.js';
-import Entity from 'numbani-react/lib/ui/model/Entity';
-
-<br/>
-<br/>
-
-Do you remember that :
-
-The `<Entity/>` component can take as child a function. 
-
-- The **first parameter** is always the **value loaded** from the backend.
-- The **second parameter** contains **information** about the request like `{ isLoading, loadingError }` and others you will discover later
-- The **third parameter** contains **commands** like `{ reload }`
-
-Now we will introduce new **commands** and **information** :
-
-## Set, Merge
-
-You can then use the commands `{set, merge}` to update the value *locally*.
-(*set* replace the whole value, while *merge* performs merge update.)
-
-<br/>
-
-```javascript
-import Entity from 'numbani-react/lib/ui/model/Entity';
-```
-
-<Playground>
-<Entity repo={heroesRepo} 
-defaultValue={defaultHero}>
-{
-( hero, {isLoading, loadingError}, { set , merge }) =>
-isLoading? <b>Loading...</b> : (<div>
-<pre>
-{JSON.stringify(hero, null, 2)}
-</pre>
-<label>Change your alias : </label>
-<input value={hero.alias} onChange={ event => merge({ alias : event.target.value }) } />
-</div>
-)
-}
-</Entity>
-</Playground>
-
-<br/>
-
-There are more commands available than just *set* and *merge*, there is even an extension with [react-value](https://github.com/ianstormtaylor/react-values/blob/master/docs/reference.md#api-reference) that bring more commands, but more on this later 🤗.
-
-## isValidating, isValid, validationErrors, validationErrorsCount
-
-Your entities are validated according to the schema you defined and you can have access to the current validation state.
-It is included as information `{isValidating, isValid, validationErrors,validationErrorsCount }`.
-
-Remember we defined `.addAttribute("age", types.Number.required().min(18))`, try it :
-
-<Playground>
-<Entity repo={heroesRepo}
-defaultValue={defaultHero}>
-{
-( hero, {isLoading, isValidating, isValid, validationErrors, validationErrorsCount}, { merge }) =>
-!isLoading && <div>
-<pre>
-{JSON.stringify({isValidating, isValid, validationErrors, validationErrorsCount}, null, 2)}
-</pre>
-Age : {hero.age}
-<br/>
-<button onClick={()=>merge({age : hero.age+10})}>+10</button>
-<button onClick={()=>merge({age : hero.age-10})}>-10</button>
-</div>
-}
-</Entity>
-</Playground>
-
-
-<Link to="/docs-data-types">Discover validation messages of all data types</Link>
-
-## save, isSaving, savingError, isSaved
-
-<Playground>
-<Entity repo={heroesRepo}
-defaultValue={{ alias : "" }}
-onSave={(ref) => window.alert("Saved at ref "+ref) }
-entityRef="myHero">
-{
-( hero, {isLoading, isValid, isSaving, savingError, isSaved }, { merge, save }) =>
-!isLoading && <div>
-<pre>
-{JSON.stringify({isValid, isSaving, savingError, isSaved}, null, 2)}
-</pre>
-<label>Change your alias : </label>
-<input value={hero.alias} onChange={ event => merge({ alias : event.target.value }) } />
-<br/>
-{ isValid?<button onClick={save}>Save</button>:"Not valid"}
-<br/>
-{ savingError && savingError.toString()}
-<br/>
-{ isSaved && "Saved !"}
-</div>
-}
-</Entity>
-</Playground>
-
-<br/>
-
-Notice we used **onSave**, it is not a command or an information, but a callback for event supported by `<Entity/>`.
-You can read more on it on the documentation page of `<Entity/>`.
-
-(TODO : Insert link to Entity docs )
-
-## Extensions
-
-As for displaying data, you can also use shipped components to edit your data.
-
-Examples :
-
-### Bootstrap 4
+## Bootstrap 4 components
 
 `<Attribute/>` allows you to edit an entity attribute according to its type.
 Type validation is also included, try using an empty alias or an age below 18.
@@ -181,6 +28,7 @@ Type validation is also included, try using an empty alias or an age below 18.
 `<ResetButton/>` allows you to reset any edit made to the value;
 
 ```javascript
+import Entity from 'numbani-react/lib/ui/model/Entity';
 import Attribute from 'numbani-react/lib/ui/bootstrap4/Attribute';
 import SaveButton from 'numbani-react/lib/ui/bootstrap4/SaveButton';
 import ResetButton from 'numbani-react/lib/ui/bootstrap4/SaveButton';
@@ -193,7 +41,7 @@ import ResetButton from 'numbani-react/lib/ui/bootstrap4/ResetButton';
 import SavedAlert from 'numbani-react/lib/ui/bootstrap4/SavedAlert';
 
 <Playground>
-<Entity repo={heroesRepo}
+<Entity repo={localHeroesRepo}
 entityRef="myHero"
 defaultValue={{
 }}>

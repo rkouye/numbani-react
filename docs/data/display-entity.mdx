@@ -15,50 +15,7 @@ How to use numbani-react to display data (stored in your backend) to users?
 
 - <Link to="docs-data-concepts">You need an entity repository (EntityRepo) object.</Link>
 
-For example, using Firestore as persistence provider :
-
-```javascript
-
-import EntityManagerBuilder from "numbani-react/lib/model/EntityManagerBuilder";
-import FirestorePersistence from "numbani-react/lib/model/persistence/provider/Firestore";
-
-import EntitySchemaBuilder from "numbani-react/lib/model/schema/EntitySchemaBuilder";
-import types from "numbani-react/lib/model/schema/types";
-
-import firebase from "firebase/app";
-import "firebase/firestore"; // Required for side effect
-
-import Entity from 'numbani-react/lib/ui/model/Entity';
-
-const config = {
-  /* PUT YOUR FIREBASE CONFIG HERE */
-};
-
-firebase.initializeApp(config);
-
-const db = firebase.firestore();
-
-const entityManager = new EntityManagerBuilder()
-  .withPersistenceProvider(new FirestorePersistence(db))
-  .build();
-
-const heroSchema = new EntitySchemaBuilder()
-  .addAttribute("alias",types.String.required().min(1).max(255))
-  .addAttribute("powers", types.Array.of(types.String).required())
-  .addAttribute("colors", types.Array.of(types.String).required())
-  .build();
-
-const heroesRepo = entityManager.register("heroes", { schema: heroSchema });
-
-```
-
-The `<Entity/>` component provide an **EntityContext** that can be used to extends it.
-You can build your own extensions to make development faster. But first, check what is available by default.
-
-**NOTE**
-
 The following examples use `FirestorePersistenceProvider`, hence the use of `db` for entities references.
-
 
 ## Bootstrap 4 components
 
@@ -70,6 +27,7 @@ that can be used with to display your entity.
 `<Attribute/>` automatically display an entity attribute according to its type.
 
 ```javascript
+import Entity from 'numbani-react/lib/ui/model/Entity';
 import Attribute from 'numbani-react/lib/ui/bootstrap4/Attribute';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
 ```
@@ -88,6 +46,7 @@ List of <Attribute name="alias"/>'s powers
 `<LoadingError/>` automatically display loading error if there is any.
 
 ```javascript
+import Entity from 'numbani-react/lib/ui/model/Entity';
 import LoadingError from 'numbani-react/lib/ui/bootstrap4/LoadingError';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
 ```
