@@ -8,10 +8,7 @@ import { Link } from 'docz';
 
 # Getting started
 
-[![Travis][build-badge]][build]
-[![npm package][npm-badge]][npm]
-[![Coveralls][coveralls-badge]][coveralls]
-[![GitHub stars](https://img.shields.io/github/stars/numbani/numbani-react.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/numbani/numbani-react/stargazers/)
+[![Travis][build-badge]][build] [![npm package][npm-badge]][npm] [![Coveralls][coveralls-badge]][coveralls] [![GitHub stars](https://img.shields.io/github/stars/numbani/numbani-react.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/numbani/numbani-react/stargazers/)
 
 
 ## About
@@ -24,9 +21,17 @@ The library provide React components for many goals : Login, Display Data, Edit 
 
 It try to gather **most of the things** you will need in **one place** with **zero config**.
 
-*Do not worry about bundle size, if you use webpack as bundler you can still import only what you need.*
+*You also don't have to worry about bundle size, you only import only what you need.*
 
-Even if built with PoC or MVP in mind, the abstraction numbani-react offers can still be useful in final product.
+I started this project as a way to provide *reusable logic* that I find myself always rewriting in React.
+
+I don't know, but I think there is not out there a lot of libraries like this because there is no (and there should not be) standard way to manage thing like data loading, async validation, or authentication in React.
+
+However, there is clearly a set of best pratices that have been emerging on React's documentation, especially after version 16.4. 
+
+What I am trying to do here is to encapsulate those best pratices in a ready to use library, and update them as my understanting of React grow. At least, it helps me build things faster and learn more about React. I hope it could help more people.
+
+And even if it was built with PoC or MVP in mind, the abstraction numbani-react offers can still be useful in final product.
 
 **Demo** : (TODO) list of web apps built entirely with numbani-react and how long it took to build them.
 
@@ -49,30 +54,25 @@ yarn add numbani-react
 
 ## Usage
 
-Using numbani-react to build your web apps means :
+Here is a list of functionalities this library provide :
 
-1. Define what end users can do on your web app
-2. Find if there is a component in the library to implement it (stay generic)
-3. Profit 😅
+**Authentication**
 
-Here is a list of functionality this library covers (some of these are not ready yet):
+<Link to="/docs-auth-firebase">Authentication with Firebase</Link>
 
-- <Link to="/docs-auth-firebase">Authentication</Link> (Login, Logout, Get user info, Edit user info...)
-- Data (Display data, Sync data, Queries, Edit data...)
-- Task (Start task, Monitor Progress, Cancel Task ...)
-- All this work out the box, nearly zero config !
+**Data**
 
-## Backend
+(Works out of the box with Firebase Firestore, Local Storage... and can be extended to any backend) :
 
-Web apps need a Backend to allow functionality like Authentication. We have provided integration for **Firebase** as Backend, but you can also implement yours.
+- <Link to="/docs-data-concepts">Data management</Link>
 
-## Frontend UI lib
+- <Link to="/docs-data-display-entity">Load and display data</Link>
 
-To make our components we use internally *Bootstrap 4 and Reactstrap*. And soon you could choose *Material UI* instead. But you can also implement yours.
+- <Link to="/docs-data-edit-entity">Edit, validate and save data</Link>
 
 ## One last thing
 
-It is open source and contributions are welcome, if you think we are doing something wrong tell us !
+It is open source and contributions are welcome !
 
 [build-badge]: https://img.shields.io/travis/numbani/numbani-react/master.svg
 [build]: https://travis-ci.org/numbani/numbani-react
