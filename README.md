@@ -4,9 +4,9 @@
 [![npm package][npm-badge]][npm]
 [![Coveralls][coveralls-badge]][coveralls]
 
-Numbani-React is a library for fast 🌠 web apps prototyping (think MVP or PoC).
+Numbani-React is a library for fast 🌠 web apps prototyping.
 
-See it as a toolbox to build web apps with React without coding basic stuff again.
+See it as a toolbox to build simple web apps with React without coding basic stuff again.
 
 The library provide React components for many goals : Login, Display Data, Edit Data, Monitor Progress, Start Task etc...
 

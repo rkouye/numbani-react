@@ -3,7 +3,7 @@ import path from 'path';
 export default {
     source: "./docs",
     title: "numbani-react",
-    description: "A React library for fast prototyping. Contains useful helpers.",
+    description: "Prototype faster 🌠 with React. Contains useful helpers.",
     indexHtml : "docs/index.html",
     modifyBundlerConfig: (config) => {
         // Allow css
