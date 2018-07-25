@@ -11,6 +11,79 @@ import firebaseui from 'firebaseui';
 import Login from '../../src/ui/firebaseui/Login';
 import 'firebaseui/dist/firebaseui.css';
 
+import { AuthServiceProvider, AuthServiceConsumer } from '../../src/ui/auth/AuthService';
+import FirebaseAuth from '../../src/auth/provider/FirebaseAuth';
+
+# Get the user login state
+
+**AuthService** is an interface defined by numbani-react to access the user login state, to log him out, to read user info and to subscribe to authentication event.
+
+**Following examples use Firebase as AuthService.** 
+
+## In pure javascript
+
+```javascript
+
+import firebase from 'firebase/app';
+import 'firebase/auth';
+
+import FirebaseAuth from 'numbani-react/lib/auth/provider/FirebaseAuth';
+
+const config = {
+    /* PUT FIREBASE CONFIG HERE */
+};
+
+firebase.initializeApp(config);
+
+const authService = new FirebaseAuth(firebase.auth()); // <<<<<<< HERE
+
+console.log(authService.userIsConnected()); // true or false
+
+console.log(authService.getUser()); // if the user is connected return a firebase.User instance.
+
+authService.onAuthStateChanged(() => console.log("User logged in or out."));
+
+authService.signOut(); //Return a promise that resolve when the user is logged out.
+
+```
+
+## Inside a React component
+
+
+If you want to *inject* user information into a React Component, the recommended way to do it, is to use the **AuthServiceProvider** and **AuthServiceConsumer** components.
+
+You can import them like this :
+
+```javascript
+
+import { AuthServiceProvider, AuthServiceConsumer } from 'numbani-react/lib/ui/auth/AuthService';
+import FirebaseAuth from 'numbani-react/lib/auth/provider/FirebaseAuth';
+
+```
+
+Here is an example :
+
+<Playground>
+  <AuthServiceProvider authService={new FirebaseAuth(firebase.auth())}>
+          <AuthServiceConsumer>
+            {
+              authService =>
+                authService.userIsConnected() ?
+                  <p>You are connected as {authService.getUser().displayName}.
+                  <button onClick={authService.signOut}>Log Out !</button></p>
+                  :
+                  <p>You are not connected.</p>
+            }
+          </AuthServiceConsumer>
+        </AuthServiceProvider>
+</Playground>
+
+**NOTE**
+
+Like any React context provider, you can define the **AuthServiceProvider** once at the top level component, then use it anywhere below. Also, with this abstraction, you are free to change *authService* by any other implementation later. You are not bound to *Firebase*.
+
+However make sure to use the **AuthServiceConsumer** only where you need it.
+
 # Login
 
 If you are using Firebase Authentication, there is a **Login** component available. Actually, it is a wrapper around [FirebaseUI](https://github.com/firebase/firebaseui-web).
@@ -76,77 +149,6 @@ You can have more information on the prop **uiConfig** [here](https://github.com
 
 **NOTE**
 
-*It is better to check if the user is already logged in before displaying the component (see how in the next section);*
+*It is better to check if the user is already logged in before displaying the component;*
 
 *You can only have one active Login component due to a limitation of FirebaseUI;*
-
-
-
-import { AuthServiceProvider, AuthServiceConsumer } from '../../src/ui/auth/AuthService';
-import FirebaseAuth from '../../src/auth/provider/FirebaseAuth';
-
-# Get the user login state
-
-**AuthService** is an interface defined by numbani-react for *Firebase* or any other authentication provider to access the user login state, to log him out, to read user info and to subscribe authentication change event.
-
-## In pure javascript
-
-```javascript
-
-import firebase from 'firebase/app';
-import 'firebase/auth';
-
-import FirebaseAuth from 'numbani-react/lib/auth/provider/FirebaseAuth';
-
-const config = {
-    /* PUT FIREBASE CONFIG HERE */
-};
-
-firebase.initializeApp(config);
-
-const authService = new FirebaseAuth(firebase.auth()); // <<<<<<< HERE
-
-console.log(authService.userIsConnected()); // true or false
-
-console.log(authService.getUser()); // if the user is connected return a firebase.User instance.
-
-authService.onAuthStateChanged(() => console.log("User logged in or out."));
-
-authService.signOut(); //Return a promise that resolve when the user is logged out.
-
-```
-
-## Inside a React component
-
-
-If you want to *inject* user information into a React Component, the recommended way to do it, is to use the **AuthServiceProvider** and **AuthServiceConsumer** components.
-
-You can import them like this :
-
-```javascript
-
-import { AuthServiceProvider, AuthServiceConsumer } from 'numbani-react/lib/ui/auth/AuthService';
-import FirebaseAuth from 'numbani-react/lib/auth/provider/FirebaseAuth';
-
-```
-
-Here is an example :
-
-<Playground>
-  <AuthServiceProvider authService={new FirebaseAuth(firebase.auth())}>
-          <AuthServiceConsumer>
-            {
-              authService =>
-                authService.userIsConnected() ?
-                  <p>You are connected as {authService.getUser().displayName}.
-                  <button onClick={authService.signOut}>Log Out !</button></p>
-                  :
-                  <p>You are not connected.</p>
-            }
-          </AuthServiceConsumer>
-        </AuthServiceProvider>
-</Playground>
-
-**NOTE**
-
-Like any react provider, you can define the **AuthServiceProvider** once at the top level component, then use it anywhere below. Also, with this abstraction, you are free to change *authService* by any other implementation later. You are not bound to *Firebase*.
