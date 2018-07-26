@@ -38,4 +38,22 @@ array.of = function(...types) {
   return newType;
 };
 
+array.max = function(length){
+  const newType = this.extendWithValidators(
+      value => isEmpty.or(isArray.and(arr => arr.length <= length))(value)?
+      []:[new ValidationError("numbani:validations.array.invalidMaxLength", {value, expected : length, actual : value.length})]
+  );
+  newType.addInfo("array.max", Math.min(newType.getInfo("array.max") || Number.POSITIVE_INFINITY , length));
+  return newType;
+}
+
+array.min = function(length){
+  const newType = this.extendWithValidators(
+      value => isEmpty.or(isArray.and(arr => arr.length >= length))(value)?
+      []:[new ValidationError("numbani:validations.array.invalidMinLength", {value, expected : length, actual : value.length})]
+  );
+  newType.addInfo("array.min", Math.max(newType.getInfo("array.min") || Number.NEGATIVE_INFINITY , length));
+  return newType;
+}
+
 export default array;
