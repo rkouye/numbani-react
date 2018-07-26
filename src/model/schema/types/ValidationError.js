@@ -9,6 +9,10 @@ class ValidationError {
         this.message = message;
         this.info = info;
     }
+
+    display(){
+        return this.message;
+    }
 }
 
 export default ValidationError;

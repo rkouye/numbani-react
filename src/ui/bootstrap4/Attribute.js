@@ -6,6 +6,21 @@ import types, { Type } from '../../model/schema/types';
 import { FormFeedback, Input, Button, ListGroup, ListGroupItem  } from 'reactstrap';
 import NumericInput from 'react-numeric-input';
 
+function renderValidationErrors(props) {
+    return props.feedback?
+    (
+        (typeof props.feedback === 'function')?
+        props.feedback(props.validationErrors).map(message => <FormFeedback style={{ display : "block"}} key={message}>{message}</FormFeedback>)
+        :
+        <FormFeedback style={{ display : "block"}}>{props.feedback}</FormFeedback>
+    )
+    :
+    props.validationErrors.map( 
+        error => 
+        <FormFeedback style={{ display : "block"}} key={JSON.stringify(error)}>{error.display()}</FormFeedback>
+    );
+}
+
 /**
  * @param {Type} type
  * @returns
@@ -50,10 +65,7 @@ function getControlString(type){
                                 onBlur={this.handleBlur}
                                 invalid={valueIsInvalid}
                             />
-                            {valueIsInvalid &&
-                            //TODO: Add localization
-                                this.props.validationErrors.map( error => <FormFeedback key={JSON.stringify(error)}>{error.message}</FormFeedback> )
-                            }
+                            {valueIsInvalid && renderValidationErrors(this.props)}
                         </React.Fragment>
                         :
                         (this.props.value || "")
@@ -92,10 +104,7 @@ function getControlNumber(type){
                         value={this.state.value}
                         onChange={this.handleChange}
                         className={`form-control ${valueIsInvalid?'is-invalid':''}`}/>
-                    {valueIsInvalid &&
-                        //TODO: Add localization
-                        this.props.validationErrors.map( error => <FormFeedback style={{ display : "block"}} key={JSON.stringify(error)}>{error.message}</FormFeedback> )
-                    }
+                    {valueIsInvalid && renderValidationErrors(this.props)}
                 </React.Fragment>
                 :
                  (this.props.value || "")
@@ -173,6 +182,7 @@ function getControlArray(type){
                             <TypeControl
                                 value={item}
                                 edit={this.props.edit}
+                                feedback={this.props.feedback}
                                 onChange={this.change(index)}
                                 validationErrors={validationErrors}
                             />
@@ -194,10 +204,7 @@ function getControlArray(type){
                             onClick={this.add}>+</Button>
                     </ListGroupItem>}
                 </ListGroup>
-                {valueIsInvalid &&
-                        //TODO: Add localization
-                        this.props.validationErrors.map( error => <FormFeedback style={{ display : "block"}} key={JSON.stringify(error)}>{error.message}</FormFeedback> )
-                    }
+                {valueIsInvalid && renderValidationErrors(this.props)}
                 </React.Fragment>
             );
         }
@@ -254,6 +261,7 @@ class AttributeBase extends Component {
                 value={(eC.editedValue || eC.loadedValue)[this.props.name]}
                 edit={this.props.edit}
                 onChange={this.onChange}
+                feedback={this.props.feedback}
                 validationErrors={eC.validationErrors?eC.validationErrors[this.props.name]:[]}
             />
             : null
@@ -265,7 +273,8 @@ const Attribute = injectEntityContext(AttributeBase, 'entityContext');
 
 Attribute.propTypes = {
     name : PropTypes.string.isRequired,
-    edit : PropTypes.bool
+    edit : PropTypes.bool,
+    feedback : PropTypes.oneOfType([PropTypes.string, PropTypes.func])
 };
 
 export default Attribute;
