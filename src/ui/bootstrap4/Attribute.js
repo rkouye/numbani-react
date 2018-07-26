@@ -196,7 +196,9 @@ function getControlArray(type){
                         })
                     ) : null
                     }
-                    { this.props.edit && <ListGroupItem>
+                    { this.props.edit 
+                     && !(type.getInfo('array.max') <= (this.props.value || []).length)
+                     && <ListGroupItem>
                         <Button 
                             color="primary"
                             aria-label="Add"
