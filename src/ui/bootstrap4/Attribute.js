@@ -37,7 +37,7 @@ function getControlString(type){
         }
 
         render() {
-            const valueIsValid = type.accepts(this.props.value);
+            const valueIsInvalid = this.state.dirty && this.props.validationErrors && this.props.validationErrors.length > 0;
             return (
                 <React.Fragment>
                     {this.props.edit?
@@ -48,12 +48,11 @@ function getControlString(type){
                                 onChange={this.handleChange}
                                 onFocus={this.handleFocus}
                                 onBlur={this.handleBlur}
-                                valid={this.state.dirty && valueIsValid}
-                                invalid={this.state.dirty && !valueIsValid}
+                                invalid={valueIsInvalid}
                             />
-                            {valueIsValid ||
+                            {valueIsInvalid &&
                             //TODO: Add localization
-                                type.getValidationErrors(this.props.value).map( error => <FormFeedback key={JSON.stringify(error)}>{error.message}</FormFeedback> )
+                                this.props.validationErrors.map( error => <FormFeedback key={JSON.stringify(error)}>{error.message}</FormFeedback> )
                             }
                         </React.Fragment>
                         :
@@ -84,9 +83,7 @@ function getControlNumber(type){
             this.props.onChange(value);
         }
         render(){
-            const valueIsValid = type.accepts(this.props.value);
-            const inputValid = this.state.dirty && valueIsValid;
-            const inputInvalid = this.state.dirty && !valueIsValid;
+            const valueIsInvalid = this.state.dirty && this.props.validationErrors && this.props.validationErrors.length > 0;
             return (
                 <React.Fragment>
                 {this.props.edit?
@@ -94,10 +91,10 @@ function getControlNumber(type){
                     <NumericInput 
                         value={this.state.value}
                         onChange={this.handleChange}
-                        className={`form-control ${inputValid?'is-valid':''} ${inputInvalid?'is-invalid':''}`}/>
-                    {inputInvalid &&
+                        className={`form-control ${valueIsInvalid?'is-invalid':''}`}/>
+                    {valueIsInvalid &&
                         //TODO: Add localization
-                        type.getValidationErrors(this.props.value).map( error => <FormFeedback style={{ display : "block"}} key={JSON.stringify(error)}>{error.message}</FormFeedback> )
+                        this.props.validationErrors.map( error => <FormFeedback style={{ display : "block"}} key={JSON.stringify(error)}>{error.message}</FormFeedback> )
                     }
                 </React.Fragment>
                 :
@@ -116,16 +113,39 @@ function getControlNumber(type){
 function getControlArray(type){
 
     return class ControlArray extends Component {
+        
+        constructor(props){
+            super(props);
+            this.state = { dirty : false};
+        }
 
-        onChange = (index) => (newValue) => {
+        change = (index) => (newValue) => {
+            this.setState({dirty : true});
             this.props.onChange( this.props.value.map( (originalItem,itemIndex) => (index===itemIndex)?newValue:originalItem));
         }
 
+        add = () => {
+            this.setState({dirty : true});
+            this.props.onChange([...(this.props.value || []), null])
+        }
+
+        remove = (index) => () => {
+            this.setState({dirty : true});
+            this.props.onChange(this.props.value.filter((val, pos) => pos!==index))
+        }
+
         typeControlCache = []
+        /**
+         * @type {Array.<Type>}
+         */
+        typesCache = []
 
         render() {
+            //TODO : Rewrite array validation. Pass down invalid element index in validationError.
+            const valueIsInvalid = this.state.dirty && this.props.validationErrors && this.props.validationErrors.length > 0;
             return (
-                <ListGroup>
+                <React.Fragment>
+                    <ListGroup className={`${valueIsInvalid?"border border-danger rounded":""}`}>
                     {   this.props.value?
                         (this.props.value.map( (item, index) => {
 
@@ -133,32 +153,35 @@ function getControlArray(type){
                                 for ( let itemType of type.getInfo("of") ){
                                     if( itemType.accepts(item)) {
                                         this.typeControlCache[index] = getControlForType(itemType);
+                                        this.typesCache[index] =itemType;
                                         break;
                                     }
                                 }
                                 if(item === null || item === undefined){
                                     // First type is default :( , this is maybe some bad design, I guess
                                     this.typeControlCache[index] = getControlForType(type.getInfo("of")[0]);
+                                    this.typesCache[index] = type.getInfo("of")[0];
                                 }
                                 //TODO : Check before if array is valid and display error instead
                                 if(!this.typeControlCache[index]) throw new Error("UI Lib can't render array, no type accepts "+ item);
                             }
 
-                            const TypeControl = this.typeControlCache[index]
-
-                            return <ListGroupItem key={index} className="d-flex flex-row">
+                            const TypeControl = this.typeControlCache[index];
+                            const validationErrors = this.typesCache[index].getValidationErrors(item);
+                            return <ListGroupItem key={index} className={`d-flex flex-row`}>
                             <div className="flex-fill">
                             <TypeControl
                                 value={item}
                                 edit={this.props.edit}
-                                onChange={this.onChange(index)}
+                                onChange={this.change(index)}
+                                validationErrors={validationErrors}
                             />
                             </div>
                             {this.props.edit && <Button
                                 aria-label="Close"
                                 className="align-self-start mx-2 font-weight-bold"
                                 color="danger"
-                                onClick={() => this.props.onChange(this.props.value.filter((val, pos) => pos!==index))}>&times;</Button>}
+                                onClick={this.remove(index)}>&times;</Button>}
                             </ListGroupItem>
                         })
                     ) : null
@@ -168,9 +191,14 @@ function getControlArray(type){
                             color="primary"
                             aria-label="Add"
                             className="font-weight-bold"
-                            onClick={() => this.props.onChange([...(this.props.value || []), null])}>+</Button>
+                            onClick={this.add}>+</Button>
                     </ListGroupItem>}
                 </ListGroup>
+                {valueIsInvalid &&
+                        //TODO: Add localization
+                        this.props.validationErrors.map( error => <FormFeedback style={{ display : "block"}} key={JSON.stringify(error)}>{error.message}</FormFeedback> )
+                    }
+                </React.Fragment>
             );
         }
     }
@@ -226,6 +254,7 @@ class AttributeBase extends Component {
                 value={(eC.editedValue || eC.loadedValue)[this.props.name]}
                 edit={this.props.edit}
                 onChange={this.onChange}
+                validationErrors={eC.validationErrors?eC.validationErrors[this.props.name]:[]}
             />
             : null
         );
