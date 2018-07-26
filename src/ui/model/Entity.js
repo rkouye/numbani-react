@@ -138,7 +138,7 @@ class Entity extends Component {
             );
         },
         reset : ()=>{
-            this.setState({ editedValue : null});
+            this.setState({ editedValue : null, ...initialValidationInfo});
         },
         merge : (newValue)=>{
             this.setState((prevState) => ({
