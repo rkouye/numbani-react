@@ -1,11 +1,13 @@
 ---
-name: Load and display data
-menu: Data
+name: 4. Load and display data
 ---
 
 import { Playground, Link, PropsTable } from 'docz';
 import Entity from 'numbani-react/lib/ui/model/Entity';
 import {db, heroesRepo} from 'numbani-react/docs/utils/FirebaseEntityManager';
+
+
+import LoadingSpinner from 'numbani-react/lib/ui/spinkit/LoadingSpinner';
 
 # Display data
 
@@ -17,17 +19,70 @@ How to use numbani-react to display data (stored in your backend) to users?
 
 The following examples use `FirestorePersistenceProvider`, hence the use of `db` for entities references.
 
-## Bootstrap 4 components
+## Entity
 
-Here are some extensions components built *mainly* with *Bootstrap 4* (but also **reactstrap**, **react-spinkit**, **react-numeric-input** )
-that can be used with to display your entity.
+
+To load data you can use a component called `<Entity/>`.
+
+```javascript
+import Entity from 'numbani-react/lib/ui/model/Entity';
+```
+
+This component integrate with your `EntityRepo` and automatically load your data.
+
+You can access the data loaded inside the `<Entity/>` directly without any config.
+
+For example let's load information about batman in our backend (a firestore database) and display it.
+
+<Playground>
+<Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("batman")}>
+    {
+        batman => JSON.stringify(batman)
+    }
+</Entity>
+</Playground>
+
+<Link to="docs-data-references-entity">More information on Entity</Link>
+
+## Integration
+
+Inside the `<Entity/>` component, other component can access an **EntityContext**, that can be used to
+make it even easier for you to load and display data.
+
+## Integrate with React-Spinkit
+
+As this is a really common use case :
+
+```javascript
+import LoadingSpinner from 'numbani-react/lib/ui/spinkit/LoadingSpinner';
+```
+`<LoadingSpinner/>` will display a loading spinner when the data is loading.
+
+It take the same props as a [Spinner](https://kyleamathews.github.io/react-spinkit/) in [react-spinkit](https://github.com/KyleAMathews/react-spinkit).
+
+You may have to throttle your network connection to notice it.
+
+<Playground>
+<Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("batman")}>
+{
+    (batman, {isLoading}, {reload})=><div>
+        <LoadingSpinner spinner="wave" color="blue" fadeIn="none"/>
+        { !isLoading && <button onClick={reload}>Click to reload</button>}
+    </div>
+}
+</Entity>
+</Playground>
+
+## Integrate with Bootstrap 4 components
+
+We know that it can take time to create UI component to display your data, so we provided an integration
+with *Bootstrap 4* (using *reactstrap* ) to automatically display your data.
 
 ### Attribute
 
 `<Attribute/>` automatically display an entity attribute according to its type.
 
 ```javascript
-import Entity from 'numbani-react/lib/ui/model/Entity';
 import Attribute from 'numbani-react/lib/ui/bootstrap4/Attribute';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
 ```
@@ -35,8 +90,10 @@ import Attribute from 'numbani-react/lib/ui/bootstrap4/Attribute';
 
 <Playground>
 <Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("batman")}>
-<Attribute name="alias" label="Alias :"/>
-<Attribute name="powers" label="Powers :"/>
+<LoadingSpinner name="wave" color="red"/>
+<div>Alias : <Attribute name="alias"/></div>
+<div>Age : <Attribute name="age"/></div>
+<div>Powers : <Attribute name="powers"/></div>
 </Entity>
 </Playground>
 
@@ -53,7 +110,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
 import LoadingError from 'numbani-react/lib/ui/bootstrap4/LoadingError';
 
 <Playground>
-<Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("dontExist")}>
+<Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("?")}>
 <LoadingError />
 </Entity>
 </Playground>

@@ -20,6 +20,7 @@ const entityManager = new EntityManagerBuilder()
 
 const heroSchema = new EntitySchemaBuilder()
     .addAttribute("alias", types.String.required().min(1).max(255))
+    .addAttribute("age", types.Number.required().min(0))
     .addAttribute("powers", types.Array.of(types.String).required())
     .build();
 
