@@ -1,7 +1,7 @@
 import types from './'
 import expect from 'expect';
 
-describe("Types", ()=>{
+xdescribe("Types", ()=>{
 
     describe("Date", ()=>{
 
