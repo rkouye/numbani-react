@@ -45,15 +45,16 @@ import SavedAlert from 'numbani-react/lib/ui/bootstrap4/SavedAlert';
 entityRef="myHero"
 defaultValue={{
 }}>
-<b>Your alias :</b>
-<Attribute name="alias" feedback="Enter your alias" edit />
-<b>Your age :</b>
-<Attribute name="age" feedback="Hero must be major" edit />
-<b>Your powers :</b>
-<Attribute name="powers" feedback="Enter maximum three valid powers" edit/>
-<br/>
+
+<Attribute label="Alias" name="alias" feedback="Enter your alias" edit />
+<Attribute label="Age (in years)" name="age" feedback="Hero must be major" edit />
+<Attribute label="Powers" name="powers" feedback="Enter maximum three valid powers" edit/>
+<Attribute label="Active" name="active" edit/>
+
 <SaveButton>Save</SaveButton> <ResetButton>Reset</ResetButton>
+
 <SavedAlert>Saved ! Reload the page to see.</SavedAlert>
+
 </Entity>
 </Playground>
 

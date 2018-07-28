@@ -3,7 +3,7 @@ import { injectEntityContext } from '../model/Entity';
 import PropTypes from 'prop-types';
 
 import types, { Type } from '../../model/schema/types';
-import { FormFeedback, Input, Button, ListGroup, ListGroupItem  } from 'reactstrap';
+import { FormFeedback, Input, Label, FormGroup, Button, ListGroup, ListGroupItem } from 'reactstrap';
 import NumericInput from 'react-numeric-input';
 
 function renderValidationErrors(props) {
@@ -57,6 +57,8 @@ function getControlString(type){
                 <React.Fragment>
                     {this.props.edit?
                         <React.Fragment>
+                            <FormGroup>
+                            {this.props.label && <Label>{this.props.label}</Label>}
                             <Input
                                 type="text"
                                 value={this.state.value}
@@ -66,15 +68,73 @@ function getControlString(type){
                                 invalid={valueIsInvalid}
                             />
                             {valueIsInvalid && renderValidationErrors(this.props)}
+                            </FormGroup>
                         </React.Fragment>
-                        :
-                        (this.props.value || "")
+                        :<React.Fragment>
+                            {this.props.label && <Label>{this.props.label}</Label>} {this.props.value || ""}
+                        </React.Fragment>
                     }
                 </React.Fragment>
             );
         }
     }
 }
+
+/**
+ * @param {Type} type
+ * @returns
+ */
+function getControlBoolean(type){
+    return class ControlString extends Component {
+        constructor(props){
+            super(props);
+            this.state = { dirty : false, focused : false };
+        }
+
+        static getDerivedStateFromProps(props, state){
+            if (!state.focused){
+               return { value : (props.value || false) };
+            } else return null;
+        }
+
+        handleChange = (event) => {
+            this.setState({value : event.target.checked , dirty : true});
+            this.props.onChange(event.target.checked);
+        }
+
+        handleFocus = (event) => {
+            this.setState({ focused : true });
+        }
+
+        handleBlur = (event) => {
+            this.setState({ focused : false, dirty : true });
+        }
+
+        render() {
+            const valueIsInvalid = this.state.dirty && this.props.validationErrors && this.props.validationErrors.length > 0;
+            return (
+                <React.Fragment>
+                    <FormGroup check>
+                    <Label check>
+                    <Input
+                        type="checkbox"
+                        checked={this.state.value}
+                        disabled={!this.props.edit}
+                        onChange={this.handleChange}
+                        onFocus={this.handleFocus}
+                        onBlur={this.handleBlur}
+                        invalid={valueIsInvalid}
+                    />
+                    {this.props.label}
+                    </Label>
+                    {valueIsInvalid && renderValidationErrors(this.props)}
+                    </FormGroup>
+                </React.Fragment>
+            );
+        }
+    }
+}
+
 /**
  * @param {Type} type
  * @returns
@@ -100,14 +160,18 @@ function getControlNumber(type){
                 <React.Fragment>
                 {this.props.edit?
                 <React.Fragment>
+                    <FormGroup>
+                    {this.props.label && <Label>{this.props.label}</Label>}
                     <NumericInput 
                         value={this.state.value}
                         onChange={this.handleChange}
                         className={`form-control ${valueIsInvalid?'is-invalid':''}`}/>
                     {valueIsInvalid && renderValidationErrors(this.props)}
+                    </FormGroup>
                 </React.Fragment>
-                :
-                 (this.props.value || "")
+                :<React.Fragment>
+                    {this.props.label && <Label>{this.props.label}</Label>} {this.props.value || ""}
+                </React.Fragment>
                 }
                 </React.Fragment>
                 
@@ -154,6 +218,8 @@ function getControlArray(type){
             const valueIsInvalid = this.state.dirty && this.props.validationErrors && this.props.validationErrors.length > 0;
             return (
                 <React.Fragment>
+                    <FormGroup>
+                    {this.props.label && <Label>{this.props.label}</Label>}
                     <ListGroup className={`${valueIsInvalid?"border border-danger rounded":""}`}>
                     {   this.props.value?
                         (this.props.value.map( (item, index) => {
@@ -207,6 +273,7 @@ function getControlArray(type){
                     </ListGroupItem>}
                 </ListGroup>
                 {valueIsInvalid && renderValidationErrors(this.props)}
+                </FormGroup>
                 </React.Fragment>
             );
         }
@@ -229,6 +296,8 @@ function getControlForType(type){
         control = getControlArray(type);
     else if(type.doExtends(types.Number))
         control = getControlNumber(type);
+    else if(type.doExtends(types.Boolean))
+        control = getControlBoolean(type);
     else throw new Error(`Type ${type.toString()} not supported in bootstrap ui lib`);
     return control;
 }
@@ -264,6 +333,7 @@ class AttributeBase extends Component {
                 edit={this.props.edit}
                 onChange={this.onChange}
                 feedback={this.props.feedback}
+                label={this.props.label}
                 validationErrors={eC.validationErrors?eC.validationErrors[this.props.name]:[]}
             />
             : null
@@ -276,6 +346,7 @@ const Attribute = injectEntityContext(AttributeBase, 'entityContext');
 Attribute.propTypes = {
     name : PropTypes.string.isRequired,
     edit : PropTypes.bool,
+    label : PropTypes.string,
     feedback : PropTypes.oneOfType([PropTypes.string, PropTypes.func])
 };
 
