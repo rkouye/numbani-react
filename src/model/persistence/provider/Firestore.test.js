@@ -18,6 +18,10 @@ describe("FirestoreProvider", ()=>{
         mapDocId : value => value.UID
     });
     
+    it('Provide zero-config implementation', ()=>{
+        expect(new FirestorePersistence(db)).toExist();
+    });
+
     it.skip('it saves and read back the magic number', ()=>{
         const magicNumber = Math.floor(Math.random()*100);
         expect.assertions(2);

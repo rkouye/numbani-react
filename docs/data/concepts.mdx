@@ -1,0 +1,118 @@
+---
+name: 3. Data
+---
+
+import { Link } from 'docz';
+
+# Concepts
+
+Numbani-react takes the assumption that data related actions (display, edit, delete), could be reduced to **CRUD** (**C**reate, **R**ead, **U**pdate and **D**elete) operations on **entities**.
+
+Examples of entities are *Cars*, *Invoices*, *Customers*...
+
+Example of *Car* entity :
+```json
+{ brand : "Toyota" , numberOfSeat : 4, colors : ["red", "black"] }
+```
+Thus, to make it easier to manage data in your web app, we provide you with the **EntityManager** abstraction.
+
+## EntityManager
+
+An entity manager is a context in which your entities are created, read, updated and saved. To build one you need a **PersistenceProvider**.
+
+### PersistenceProvider
+
+The persistence provider is the underlying backend that allows you to persist your data (entities).
+
+Numbani-react ships :
+
+- <Link to="/docs-data-provider-firestore">Firebase Firestore as Persistence Provider</Link>
+- In memory Persistence Provider
+- More to come soon (Graph QL ? MongoDB ? Interface Redux ? Swagger Rest API ? Blockchain ?)
+
+
+### EntityManagerBuilder
+
+Here is a code snippet to build an entityManager using Firebase as persistence provider :
+
+```javascript
+
+import EntityManagerBuilder from 'numbani-react/lib/model/EntityManagerBuilder';
+import FirestorePersistence from 'numbani-react/lib/model/persistence/provider/Firestore';
+
+import firebase from 'firebase/app';
+import 'firebase/firestore'; // Required for side effect
+
+const config = {
+    /* PUT YOUR FIREBASE CONFIG HERE */
+};
+
+firebase.initializeApp(config);
+
+const db = firebase.firestore();
+
+const entityManager = new EntityManagerBuilder()
+  .withPersistenceProvider(new FirestorePersistence(db)) // You should read more about configuring FirestorePersistence before using it
+  .build();
+
+```
+And here is a code snippet using in memory persistence provider :
+
+```javascript
+
+import EntityManagerBuilder from 'numbani-react/lib/model/EntityManagerBuilder';
+import InMemoryPersistence from 'numbani-react/lib/model/persistence/provider/InMemory';
+
+const entityManager = new EntityManagerBuilder()
+  .withPersistenceProvider(new InMemoryPersistence()) // You can read  more about configuring InMemoryPersistence before using it
+  .build();
+
+```
+
+## Entities
+
+Once you have an entity manager, next step is to manage some entities 😄.
+
+### EntitySchema
+
+An entity schema define what type of values the entity could take.
+
+You build a schema by defining **attributes** of a certain **type** (with validation), adding **cross-attributes validation** rules (TODO) and **behaviors** (TODO).
+
+#### Defining attributes
+
+```javascript
+
+import EntitySchemaBuilder from 'numbani-react/lib/model/schema/EntitySchemaBuilder';
+import types from 'numbani-react/lib/model/schema/types';
+
+const carSchema = new EntitySchemaBuilder()
+  .addAttribute("brand", types.String.required().min(1).max(255))
+  .addAttribute("numberOfSeat", types.Number.required())
+  .addAttribute("colors", types.Array.of(types.String.required()).required())
+  .build();
+
+```
+
+
+<Link to="/docs-data-types">Learn more about data types</Link>
+
+### EntityRepo
+
+Next, register your entity schema in the entity manager. This operation returns an **EntityRepo** object.
+
+Then, you can use the entity repository object to read, save or delete entity value directly.
+
+```javascript
+
+const carsRepo = entityManager.register("cars", { schema: carSchema });
+
+carsRepo.save({ brand : "Toyota" , color : "red" }).then( ref => console.log(`New car saved at ref : ${ref}`));
+
+```
+
+More information on **EntityRepo** and *ref* here. (TODO)
+
+## Integration with React
+
+Numbani-react provides React components able to interact with entity repository.

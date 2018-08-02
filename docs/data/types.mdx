@@ -1,0 +1,151 @@
+---
+name:  Types
+menu: References
+---
+
+import { Playground, Link, PropsTable } from 'docz';
+
+# Types
+
+The most important part of the data management capabilities provided by numbani-react, come from the various data types allowed.
+
+## Type inheritance
+
+There are 4 basics data types, from which others data types can inherit. Persistence provider and UI components *should at least support basics types*, and could have more specialized treatment for advanced types.
+
+Basics types actually corresponds to primitive Javascript data types, plus some built-in objects.
+
+Every types accepts `null` or `undefined` unless `required()` is called on the Type object.
+
+1. Number
+2. Boolean
+3. String
+4. Array
+
+## All types
+
+```javascript
+import types from 'numbani-react/lib/model/schema/types';
+```
+
+### Base : Number
+
+```javascript
+
+    types.Number.accepts(42) //true
+    types.Number.accepts(-42) //true
+    types.Number.accepts(-0) //true
+    types.Number.accepts(0.000001) //true
+    types.Number.accepts(Math.PI) //true
+    types.Number.accepts(Number.MAX_SAFE_INTEGER) //true
+    types.Number.accepts(Number.MIN_SAFE_INTEGER) //true
+
+    types.Number.accepts(Number.POSITIVE_INFINITY) //false
+    types.Number.accepts(Number.NEGATIVE_INFINITY) //false
+    types.Number.accepts(NaN) //false
+    types.Number.accepts(new Date()) //false
+    types.Number.accepts([]) //false
+    types.Number.accepts("42") //false
+    types.Number.accepts("NaN") //false
+
+    types.Number.min(10).accepts(9) //false
+    types.Number.min(10).accepts(10) //true
+    types.Number.min(10).accepts(11) //true
+
+    types.Number.max(18).accepts(19) //false
+    types.Number.max(18).accepts(18) //true
+    types.Number.max(18).accepts(11) //true
+
+```
+### Base : Boolean
+
+```javascript
+
+    types.Boolean.accepts(true) //true
+    types.Boolean.accepts(false) //true
+
+    types.Boolean.accepts(-0) //false
+    types.Boolean.accepts(0.000001) //false
+    types.Boolean.accepts(Math.PI) //false
+    types.Boolean.accepts(NaN) //false
+    types.Boolean.accepts(new Date()) //false
+    types.Boolean.accepts([]) //false
+    types.Boolean.accepts("42") //false
+    types.Boolean.accepts("NaN") //false
+
+```
+
+### Base : String
+
+```javascript
+
+    types.String.accepts(35) //false
+    types.String.accepts(new Date()) //false
+    types.String.accepts("What's upppp") //true
+    types.String.max(0).accepts("") //true
+    types.String.max(1).accepts("Oups") //false
+    types.String.max(5).accepts("Noups") //true
+    types.String.max(5).accepts(null) //true
+    types.String.max(5).accepts(undefined) //true
+    types.String.max(5).required().accepts(undefined) //false
+    types.String.max(5).required().accepts("Bla  bla") //false
+    types.String.max(2).required().accepts("OK") //true
+
+    types.String.max(5).getInfo("string.max") //5
+    types.String.max(5).max(2).getInfo("string.max") //2
+    types.String.max(2).max(5).getInfo("string.max") //2
+    types.String.max(2).min(5).getInfo("string.max") //2
+    types.String.min(2).max(5).getInfo("string.max") //5
+    types.String.required().getInfo("string.max") //undefined
+
+    types.String.min(0).accepts("") //true
+    types.String.min(1).accepts("") //false
+    types.String.min(5).accepts("Cool !") //true
+    types.String.min(5).accepts("Cool!") //true
+    types.String.min(5).accepts(null) //true
+    types.String.min(5).accepts(undefined) //true
+    types.String.min(5).required().accepts(undefined) //false
+    types.String.min(5).required().accepts("NOK") //false
+    types.String.min(2).required().accepts("OK") //true
+
+    types.String.min(5).getInfo("string.min") //5
+    types.String.min(3).min(5).getInfo("string.min") //5
+    types.String.min(5).min(3).getInfo("string.min") //5
+    types.String.max(5).min(3).getInfo("string.min") //3
+    types.String.min(5).max(3).getInfo("string.min") //5
+    types.String.getInfo("string.min") //undefined
+
+    types.String.pattern(/world/).accepts("Hello world !") //true
+    types.String.pattern(/World/).accepts("Hello world !") //false
+    types.String.pattern(/World/i).accepts("Hello world !") //true
+    types.String.pattern(/^A/).accepts("A") //true
+    types.String.pattern(/^A/).accepts(" A") //false
+    types.String.pattern(/\d+/).accepts("13") //true
+    types.String.pattern(/\d+/).accepts("Thirteen") //false
+```
+
+### Base : Array
+
+```javascript
+
+    types.Array.accepts([]) //true
+    types.Array.accepts([1,true,"three"]) //true
+    types.Array.accepts(null) //true
+    types.Array.accepts(undefined) //true
+    types.Array.required().accepts(undefined) //false
+    types.Array.required().accepts(null) //false
+    types.Array.required().accepts([]) //true
+    types.Array.accepts({}) //false
+    types.Array.accepts(42) //false
+    types.Array.accepts(new Date()) //false
+    types.Array.accepts("What's upppp") //false
+
+    types.Array.of(types.String).accepts([]) //true
+    types.Array.of(types.String).accepts(["bidibi", "bobbidi", "boo"]) //true
+    types.Array.of(types.String).accepts(["answer", 42]) //false
+
+    types.Array.min(3).max(3).accepts([1,true,"three"]) //true
+    types.Array.min(4).accepts([1,true,"three"]) //false
+    types.Array.max(2).accepts([1,true,"three"]) //false
+
+```

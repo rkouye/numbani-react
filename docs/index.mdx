@@ -1,28 +1,32 @@
 ---
-name: Getting started
+name: 1. Getting started
 route : /
-order : 1
 ---
 
 import { Link } from 'docz';
 
 # Getting started
 
-[![Travis][build-badge]][build]
-[![npm package][npm-badge]][npm]
-[![Coveralls][coveralls-badge]][coveralls]
-[![GitHub stars](https://img.shields.io/github/stars/numbani/numbani-react.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/numbani/numbani-react/stargazers/)
+[![Travis][build-badge]][build] [![npm package][npm-badge]][npm] [![Coveralls][coveralls-badge]][coveralls] [![GitHub stars](https://img.shields.io/github/stars/numbani/numbani-react.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/numbani/numbani-react/stargazers/)
 
 
 ## About
 
-Numbani-React is a library for fast 🌠 web apps prototyping (think MVP or PoC).
+Numbani-React is a library for fast 🌠 web apps prototyping.
+
+See it as a toolbox to build simple web apps with React without coding basic stuff again.
+
+The library provide React components for many goals : Login, Display Data, Edit Data, Start Task, Monitor Progress etc...
 
 It try to gather **most of the things** you will need in **one place** with **zero config**.
 
-*Do not worry about bundle size, if you use webpack as bundler you can still import only what you need.*
+*You also don't have to worry about bundle size, you only import what you use.*
 
-Even if built with PoC or MVP in mind, the abstraction numbani-react offers can still be useful in final product.
+I started this project as a way to provide *reusable React logic* that I find myself always rewriting each time I was building an **MVP** or **PoC** at hackathons for example.
+I think there is not a lot of libraries like this because there is no (and there should not be) standard way to manage things like data loading, async validation, or authentication in React.
+However, there is clearly a set of best pratices that have been emerging on React's documentation, especially after React v16.4 update.
+What I am trying to do here is to encapsulate those best pratices in a ready to use library, and update them as my understanting of React grow. At least, it helps me build things faster while learning more about React.
+And even if it was built with PoC or MVP in mind, the abstraction numbani-react offers can still be useful in final product.
 
 **Demo** : (TODO) list of web apps built entirely with numbani-react and how long it took to build them.
 
@@ -45,40 +49,25 @@ yarn add numbani-react
 
 ## Usage
 
-The library provide you **user centric** components. Each components available match an **user intent** : Login, Display Entity, Edit Entity, Monitor Progress, Start Task ...
+Here is a list of functionalities this library provide :
 
-Using numbani-react to build your web apps means :
+**Authentication**
 
-1. Define what end users can do on your web app
-2. Find if there is a component in the library to implement it (stay generic)
-3. Profit 😅
+<Link to="/docs-auth-firebase">Authentication with Firebase</Link>
 
-Here is a list of intent categories the library covers (some of these are not ready yet):
+**Data**
 
-- <Link to="/docs-auth-firebase">Authentication</Link> (Login, Logout, Get user info, Edit user info...)
-- Data (Display entity, Sync entity, Queries, Edit Entity...)
-- Task (Start task, Monitor Progress, Cancel Task ...)
-- All this work out the box, nearly zero config !
+(Works out of the box with Firebase Firestore, Local Storage... and can be extended to any backend) :
 
-Here is what is not included in this library, cause it is simpler to use them outside :
+- <Link to="/docs-data-concepts">Data management</Link>
 
-- Routing, check [React-router](https://github.com/ReactTraining/react-router) instead
-- Localization, check *i18next* or *react-intl*
-- Raw UI component (for example Button), check *Bootstrap*, *Material UI*...
+- <Link to="/docs-data-display-entity">Load and display data</Link>
 
-## Backend
-
-Web apps need a Backend to allow functionality like Authentication. We have provided integration for **Firebase** as Backend, but you can also implement yours.
-
-## Frontend UI lib
-
-To make our intents components we use internally *Bootstrap 4 and Reactstrap*. And soon you could choose *Material UI* instead. But you can also implement yours.
+- <Link to="/docs-data-edit-entity">Edit, validate and save data</Link>
 
 ## One last thing
 
-We take advantage of existing tools, and inspired by *Create-react-app*, our philosophy is to pick the best known option (or one of the best if there is many) so you are ready to go. But we also don't want to lock you in, so it is actually easy to replace anything.
-
-It is open source and contributions are welcome, if you think we are doing something wrong tell us !
+It is open source and contributions are welcome !
 
 [build-badge]: https://img.shields.io/travis/numbani/numbani-react/master.svg
 [build]: https://travis-ci.org/numbani/numbani-react

@@ -4,11 +4,11 @@
 [![npm package][npm-badge]][npm]
 [![Coveralls][coveralls-badge]][coveralls]
 
-Numbani-React is a library for fast 🌠 web apps prototyping (think MVP or PoC).
+Numbani-React is a library for fast 🌠 web apps prototyping.
 
-It is built upon an interesting concept : **end user intent centric framework**.
+See it as a toolbox to build simple web apps with React without coding basic stuff again.
 
-This means that the library provide React components to match **user intent** : Login, Display Entity, Edit Entity, Monitor Progress, Start Task etc...
+The library provide React components for many goals : Login, Display Data, Edit Data, Monitor Progress, Start Task etc...
 
 [Read the documentation](https://numbani-react.netlify.com).
 

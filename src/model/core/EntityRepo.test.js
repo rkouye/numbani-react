@@ -31,7 +31,7 @@ describe("EntityRepo", ()=>{
                     .addAttribute("organization", Types.String)
                     .build();
     
-        const entity = em.buildEntity("user", {schema : userSchema});
+        const entity = em.register("user", {schema : userSchema});
         return entity.save({name : "Paul", foo : "bar"}).then( testRef => {
             expect(testRef).toBe(ref);
             expect(mockPersistence.at("user").save.calls.length).toEqual(1);
@@ -52,7 +52,7 @@ describe("EntityRepo", ()=>{
                     .addAttribute("organization", Types.String.required())
                     .build();
     
-        const entity = em.buildEntity("user", {schema : userSchema});
+        const entity = em.register("user", {schema : userSchema});
         entity.save({name : "Paul", organization : null}).catch( error => {
             expect(error instanceof Error).toBe(true);
             expect(error.validationErrorsCount).toBe(1);
@@ -76,7 +76,7 @@ describe("EntityRepo", ()=>{
                     .addAttribute("organization", Types.String)
                     .build();
     
-        const entity = em.buildEntity("user", {schema : userSchema});
+        const entity = em.register("user", {schema : userSchema});
         entity.save({name : "Paul"}).catch(catchedError => {
             expect(catchedError).toBe(error);
             done();

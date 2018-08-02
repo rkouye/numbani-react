@@ -1,0 +1,69 @@
+---
+name: 5. Edit, validate and save data
+---
+
+import { Playground, Link } from 'docz';
+import Entity from 'numbani-react/lib/ui/model/Entity';
+import {localHeroesRepo} from 'numbani-react/docs/utils/LocalEntityManager';
+
+# Edit data
+
+How to use numbani-react for editing and saving data (in your backend)?
+
+## Prerequisite
+
+- <Link to="docs-data-concepts">You need an entity repository (EntityRepo) object.</Link>
+- <Link to="docs-data-display-entity">Learn how to display data.</Link>
+
+## Use Bootstrap 4 components
+
+`<Attribute/>` allows you to edit an entity attribute according to its type.
+Type validation is also included, try using an empty alias or an age below 18.
+
+`<SaveButton/>` allows you to save the edited value into your backend;
+
+`<SaveAlert/>` allows you to display an alert when the value is saved;
+
+`<SavingError/>` will display any error which occured during saving;
+
+`<ResetButton/>` allows you to reset any edit made to the value;
+
+```javascript
+import Entity from 'numbani-react/lib/ui/model/Entity';
+import Attribute from 'numbani-react/lib/ui/bootstrap4/Attribute';
+import SaveButton from 'numbani-react/lib/ui/bootstrap4/SaveButton';
+import ResetButton from 'numbani-react/lib/ui/bootstrap4/SaveButton';
+import SavedAlert from 'numbani-react/lib/ui/bootstrap4/SavedAlert';
+import SavingError from 'numbani-react/lib/ui/bootstrap4/SavingError';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
+```
+import Attribute from 'numbani-react/lib/ui/bootstrap4/Attribute';
+import SaveButton from 'numbani-react/lib/ui/bootstrap4/SaveButton';
+import ResetButton from 'numbani-react/lib/ui/bootstrap4/ResetButton';
+import SavedAlert from 'numbani-react/lib/ui/bootstrap4/SavedAlert';
+import SavingError from 'numbani-react/lib/ui/bootstrap4/SavingError';
+
+<Playground>
+<Entity repo={localHeroesRepo}
+entityRef="myHero"
+defaultValue={{
+}}>
+
+<Attribute label="Alias" name="alias" feedback="Enter your alias" edit />
+<Attribute label="Age (in years)" name="age" feedback="Hero must be major" edit />
+<Attribute label="Powers" name="powers" feedback="Enter maximum three valid powers" edit/>
+<Attribute label="Active" name="active" edit/>
+
+<SaveButton>Save</SaveButton> <ResetButton>Reset</ResetButton>
+
+<SavedAlert>Saved ! Reload the page to see.</SavedAlert>
+
+<SavingError/>
+
+</Entity>
+</Playground>
+
+
+
+
+
