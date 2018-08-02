@@ -4,3 +4,31 @@ menu: Persistence provider
 ---
 
 # Configuring firestore as persistence provider
+
+Here is a code snippet to build an entityManager using Firebase as persistence provider :
+
+```javascript
+
+import EntityManagerBuilder from 'numbani-react/lib/model/EntityManagerBuilder';
+import FirestorePersistence from 'numbani-react/lib/model/persistence/provider/Firestore';
+
+import firebase from 'firebase/app';
+import 'firebase/firestore'; // Required for side effect
+
+const config = {
+    /* PUT YOUR FIREBASE CONFIG HERE */
+};
+
+firebase.initializeApp(config);
+
+const db = firebase.firestore();
+
+const entityManager = new EntityManagerBuilder()
+  .withPersistenceProvider(new FirestorePersistence(db))
+  .build();
+
+```
+
+When using Firestore, you create **entityRef** object using your Firestore instance.
+
+For example `db.collection("heroes").doc("batman")`;
