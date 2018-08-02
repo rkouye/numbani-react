@@ -5,7 +5,7 @@ describe("Types", ()=>{
 
     describe("Number", ()=>{
 
-        it('accepts only javascript number', ()=>{
+        it('validates number, min and max', ()=>{
             
             expect(types.Number.accepts(42)).toBe(true);
             expect(types.Number.accepts(-42)).toBe(true);
@@ -22,7 +22,15 @@ describe("Types", ()=>{
             expect(types.Number.accepts([])).toBe(false);
             expect(types.Number.accepts("42")).toBe(false);
             expect(types.Number.accepts("NaN")).toBe(false);
-            
+
+            expect(types.Number.min(10).accepts(9)).toBe(false);
+            expect(types.Number.min(10).accepts(10)).toBe(true);
+            expect(types.Number.min(10).accepts(11)).toBe(true);
+
+            expect(types.Number.max(18).accepts(19)).toBe(false);
+            expect(types.Number.max(18).accepts(18)).toBe(true);
+            expect(types.Number.max(18).accepts(11)).toBe(true);
+
         });
     });
 

@@ -47,5 +47,16 @@ describe("Types", ()=>{
             expect(types.String.min(5).max(3).getInfo("string.min")).toBe(5);
             expect(types.String.getInfo("string.min")).toBe(undefined);
         });
+
+
+        it('validates pattern', ()=>{
+            expect(types.String.pattern(/world/).accepts("Hello world !")).toBe(true);
+            expect(types.String.pattern(/World/).accepts("Hello world !")).toBe(false);
+            expect(types.String.pattern(/World/i).accepts("Hello world !")).toBe(true);            
+            expect(types.String.pattern(/^A/).accepts("A")).toBe(true);
+            expect(types.String.pattern(/^A/).accepts(" A")).toBe(false);
+            expect(types.String.pattern(/\d+/).accepts("13")).toBe(true);
+            expect(types.String.pattern(/\d+/).accepts("Thirteen")).toBe(false);
+        });
     });
 });

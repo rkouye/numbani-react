@@ -25,5 +25,16 @@ string.min = function(length){
     newType.addInfo("string.min", Math.max(newType.getInfo("string.min") || Number.NEGATIVE_INFINITY , length));
     return newType;
 }
-
+/**
+ * 
+ * @param {RegExp} regex 
+ */
+string.pattern = function (regex) {
+    const newType = this.extendWithValidators(
+        value => isEmpty.or(isString.and(str => regex.test(str)))(value)?
+        []:[new ValidationError("numbani:validations.string.patternNotMatched", {value, expected : regex, actual : value})]
+    );
+    newType.addInfo("pattern", (newType.getInfo("pattern")||[]).push(regex));
+    return newType;
+}
 export default string;

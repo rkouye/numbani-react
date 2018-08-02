@@ -17,6 +17,10 @@ describe("Types", ()=>{
             expect(types.Array.accepts(42)).toBe(false);
             expect(types.Array.accepts(new Date())).toBe(false);
             expect(types.Array.accepts("What's upppp")).toBe(false);
+
+            expect(types.Array.min(3).max(3).accepts([1,true,"three"])).toBe(true);
+            expect(types.Array.min(4).accepts([1,true,"three"])).toBe(false);
+            expect(types.Array.max(2).accepts([1,true,"three"])).toBe(false);
         });
     });
 
