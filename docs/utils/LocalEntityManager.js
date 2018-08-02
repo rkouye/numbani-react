@@ -1,5 +1,5 @@
 import EntityManagerBuilder from 'numbani-react/lib/model/EntityManagerBuilder';
-import InMemory from 'numbani-react/lib/model/persistence/provider/InMemory';
+import LocalStorage from 'numbani-react/lib/model/persistence/provider/LocalStorage';
 
 import EntitySchemaBuilder from 'numbani-react/lib/model/schema/EntitySchemaBuilder';
 import types from 'numbani-react/lib/model/schema/types';
@@ -7,7 +7,7 @@ import types from 'numbani-react/lib/model/schema/types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const entityManager = new EntityManagerBuilder()
-    .withPersistenceProvider(new InMemory())
+    .withPersistenceProvider(new LocalStorage({ path : "demo-display-data"}))
     .build();
 
 const heroSchema = new EntitySchemaBuilder()
