@@ -11,7 +11,13 @@ import LoadingSpinner from 'numbani-react/lib/ui/spinkit/LoadingSpinner';
 
 # Display data
 
-How to use numbani-react to display data (stored in your backend) to users?
+You can use numbani-react to load data in your backend and display it. You won't have to handle the promise, 
+loading animation, loading error or whatever.
+
+Coming soon :
+- UI widget for lists, filters or searches...
+- Handle infinite scrolling list or pagination...
+- Handle data syncing using polling or web socket...
 
 ## Prerequisite
 
@@ -44,12 +50,12 @@ For example let's load information about batman in our backend (a firestore data
 
 <Link to="docs-data-references-entity">More information on Entity</Link>
 
-## Integration
+## Extendable
 
-Inside the `<Entity/>` component, other component can access an **EntityContext**, that can be used to
-make it even easier for you to load and display data.
+Inside the `<Entity/>` component, other components can access an **EntityContext**, so they will just work.
+**No props passing needed**.
 
-## Integrate with React-Spinkit
+## Loading spinner with React-Spinkit
 
 As this is a really common use case :
 

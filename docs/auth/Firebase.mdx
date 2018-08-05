@@ -12,9 +12,14 @@ import 'firebaseui/dist/firebaseui.css';
 import { AuthServiceProvider, AuthServiceConsumer } from '../../src/ui/auth/AuthService';
 import FirebaseAuth from '../../src/auth/provider/FirebaseAuth';
 
-# Get the user login state
+# Get current user
 
-**AuthService** is an interface defined by numbani-react to access the user login state, to log him out, to read user info and to subscribe to authentication event.
+Numbani-react define an interface (**AuthService**) to access the user's login state and info, log him out, and subscribe to authentication event.
+
+This interface could be used to with any authentication provider (your Node/Java/Python backend, firebase app, google, facebook, github...).
+
+But we find it very convenient to use Firebase as it already supports many authentication provider.
+So we shipped an implementation of **AuthService** using [**FirebaseAuth**](https://firebase.google.com/docs/auth/web/start).
 
 **Following examples use Firebase as AuthService.** 
 
@@ -47,10 +52,9 @@ authService.signOut(); //Return a promise that resolve when the user is logged o
 
 ## Inside a React component
 
+You can *inject* user information into any React Component by using **AuthServiceProvider** and **AuthServiceConsumer** components.
 
-If you want to *inject* user information into a React Component, the recommended way to do it, is to use the **AuthServiceProvider** and **AuthServiceConsumer** components.
-
-You can import them like this :
+First import them :
 
 ```javascript
 
