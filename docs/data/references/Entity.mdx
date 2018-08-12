@@ -112,7 +112,7 @@ You can then use the commands `{set, merge}` to update the value *locally*.
 
 <Playground>
 <Entity repo={localHeroesRepo} 
-defaultValue={{}}>
+defaultValue={{ alias : ""}}>
 {
 ( hero, {isLoading, loadingError}, { set , merge }) =>
 isLoading? <b>Loading...</b> : (<div>
@@ -172,7 +172,7 @@ onSave={(ref) => window.alert("Saved at ref "+ref) }
 entityRef="myHero">
 {
 ( hero, {isLoading, isValid, isSaving, savingError, isSaved }, { merge, save }) =>
-!isLoading && <div>
+hero && <div>
 <pre>
 {JSON.stringify({isValid, isSaving, savingError, isSaved}, null, 2)}
 </pre>

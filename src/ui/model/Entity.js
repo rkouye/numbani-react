@@ -71,9 +71,19 @@ class Entity extends Component {
             this._loadingPromise = null;
         }
         const loadingPromise = entityRef?
-        (defaultValue?repo.read(entityRef).catch(() => defaultValue):repo.read(entityRef))
-        :
-        (Promise.resolve(defaultValue));
+        (defaultValue?
+            repo.read(entityRef).then(value => ({ ...defaultValue , ...(value || {})}))
+            :
+            repo.read(entityRef).then(value => {
+                if(!value) throw new Error("Entity doesn't exist");
+                return value;
+            })
+        )
+        :(defaultValue?
+            Promise.resolve(defaultValue)
+            :
+            Promise.reject(new Error("You should define at least an entityRef or a defaultValue on <Entity/>"))
+        )
         this._loadingPromise = loadingPromise;
 
         this.setState(prevState => ({loadingPromise}), ()=>{
@@ -82,7 +92,7 @@ class Entity extends Component {
                     this.setState({loadedValue});
                     this._loadingPromise = null;
                 }
-            }).catch(ignore => {}); // Ignore here cause Async  already take care of it.
+            }).catch(console.warn); // Just log here cause, Async will pass it to user.
         });
 
     }
