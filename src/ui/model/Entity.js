@@ -19,7 +19,7 @@ export const injectEntityContext = (Component, propName) => props => (
 const initialValidationInfo = {
     validationPromise : null,
     isValid : undefined,
-    isValidating : undefined,
+    isValidating : true,
     validationErrorsCount : undefined,
     validationErrors : undefined
 }
