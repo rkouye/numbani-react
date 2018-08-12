@@ -35,7 +35,7 @@ class LocalStoragePersistence extends Persistence {
 
     async read(ref){
         const previous = this.loadLS();
-        if(previous[this.context][ref] === undefined) throw new Error("Missing value");
+        if(previous[this.context][ref] === undefined) return null;
         return previous[this.context][ref];
     }
 

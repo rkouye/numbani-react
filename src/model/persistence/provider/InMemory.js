@@ -20,7 +20,7 @@ class InMemoryPersistence extends Persistence {
     }
 
     async read(ref){
-        if(this.db[ref] === undefined) throw new Error("Missing value");
+        if(this.db[ref] === undefined) return null;
         return this.db[ref];
     }
 

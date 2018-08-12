@@ -44,7 +44,7 @@ class FirestorePersistence extends Persistence {
             if(snapshot.docs){
                 return snapshot.docs.map(doc => doc.data());
             } else {
-                if(!(snapshot.exists)) return Promise.reject(new Error("Missing value"));
+                if(!(snapshot.exists)) return null;
                 return snapshot.data();
             }
         });
