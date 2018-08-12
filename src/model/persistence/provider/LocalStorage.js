@@ -17,7 +17,6 @@ class LocalStoragePersistence extends Persistence {
 
     loadLS(){
         return JSON.parse(LS.getItem(this.path) || '{}');
-
     }
 
     async save(value, at){
@@ -25,7 +24,7 @@ class LocalStoragePersistence extends Persistence {
         LS.setItem(this.path,
             JSON.stringify({   ...previous, 
                 [this.context] : {
-                    ...previous[this.context],
+                    ...(previous[this.context] || {}),
                      [at]: value
                 }
             })
@@ -35,7 +34,8 @@ class LocalStoragePersistence extends Persistence {
 
     async read(ref){
         const previous = this.loadLS();
-        if(previous[this.context][ref] === undefined) return null;
+        if(previous[this.context] === undefined || previous[this.context][ref] === undefined)
+            return null;
         return previous[this.context][ref];
     }
 
