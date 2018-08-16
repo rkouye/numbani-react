@@ -12,6 +12,9 @@ export default {
             use: ["style-loader", "css-loader"]
         });
 
+        config.resolve = config.resolve || {};
+        config.resolve.alias = config.resolve.alias || {};
+
         // Allow import from numbani-react/lib
         config.resolve.alias['numbani-react/lib'] = path.resolve(__dirname, 'src');
         // Allow import from numbani-react/docs

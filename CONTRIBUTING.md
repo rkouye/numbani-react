@@ -8,7 +8,7 @@
 
 ## Documentation and development Server
 
-- `npm dev` will run a development server with the lib's documentation app at [http://localhost:3000](http://localhost:3000) with hot module reloading.
+- `npm run dev` will run a development server with the lib's documentation app at [http://localhost:3000](http://localhost:3000) with hot module reloading.
 
 Documentation is written using MDX with *docz*.
 
