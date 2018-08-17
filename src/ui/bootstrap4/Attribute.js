@@ -62,6 +62,7 @@ function getControlString(type){
                             <Input
                                 type="text"
                                 value={this.state.value}
+                                placeholder={this.props.placeholder}
                                 onChange={this.handleChange}
                                 onFocus={this.handleFocus}
                                 onBlur={this.handleBlur}
@@ -121,6 +122,7 @@ function getControlBoolean(type){
                         checked={this.state.value}
                         disabled={!this.props.edit}
                         onChange={this.handleChange}
+                        placeholder={this.props.placeholder}
                         onFocus={this.handleFocus}
                         onBlur={this.handleBlur}
                         invalid={valueIsInvalid}
@@ -165,6 +167,7 @@ function getControlNumber(type){
                     <NumericInput 
                         value={this.state.value}
                         onChange={this.handleChange}
+                        placeholder={this.props.placeholder}
                         className={`form-control ${valueIsInvalid?'is-invalid':''}`}/>
                     {valueIsInvalid && renderValidationErrors(this.props)}
                     </FormGroup>
@@ -249,6 +252,7 @@ function getControlArray(type){
                                 value={item}
                                 edit={this.props.edit}
                                 feedback={this.props.feedback}
+                                placeholder={this.props.placeholder}
                                 onChange={this.change(index)}
                                 validationErrors={validationErrors}
                             />
@@ -333,6 +337,7 @@ class AttributeBase extends Component {
                 edit={this.props.edit}
                 onChange={this.onChange}
                 feedback={this.props.feedback}
+                placeholder={this.props.placeholder}
                 label={this.props.label}
                 validationErrors={eC.validationErrors?eC.validationErrors[this.props.name]:[]}
             />
@@ -347,6 +352,7 @@ Attribute.propTypes = {
     name : PropTypes.string.isRequired,
     edit : PropTypes.bool,
     label : PropTypes.string,
+    placeholder : PropTypes.string,
     feedback : PropTypes.oneOfType([PropTypes.string, PropTypes.func])
 };
 
