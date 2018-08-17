@@ -4,19 +4,18 @@ name: 4. Load and display data
 
 import { Playground, Link, PropsTable } from 'docz';
 import Entity from 'numbani-react/lib/ui/model/Entity';
+import Entities from 'numbani-react/lib/ui/model/Entities';
 import {db, heroesRepo} from 'numbani-react/docs/utils/FirebaseEntityManager';
 
 
 import LoadingSpinner from 'numbani-react/lib/ui/spinkit/LoadingSpinner';
 
-# Display data
+# Load and display data
 
 You can use numbani-react to load data in your backend and display it. You won't have to handle the promise, 
 loading animation, loading error or whatever.
 
 Coming soon :
-- UI widget for lists, filters or searches...
-- Handle infinite scrolling list or pagination...
 - Handle data syncing using polling or web socket...
 
 ## Prerequisite
@@ -43,7 +42,7 @@ For example let's load information about batman in our backend (a firestore data
 <Playground>
 <Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("batman")}>
     {
-        batman => JSON.stringify(batman)
+        batman => JSON.stringify(batman, null, 2)
     }
 </Entity>
 </Playground>
@@ -120,3 +119,46 @@ import LoadingError from 'numbani-react/lib/ui/bootstrap4/LoadingError';
 <LoadingError />
 </Entity>
 </Playground>
+
+import Table from 'numbani-react/lib/ui/bootstrap4/Table';
+
+## Entities
+
+`<Entity/>` doesn't support lists of data.
+
+If you are planning to load a list of data from the backend, you can use `<Entities/>`.
+
+```jsx
+<Entity repo={heroesRepo} entityRef={db.collection("heroes")}>
+{
+    (heroes, {isLoading, loadingError}) => // return a component to display.
+}
+</Entity>
+```
+
+## Extends Entities
+
+Extensions are also available for `<Entities/>`. For example, both `<LoadingSpinner/>` and
+`<LoadingError/>` still work. `<Attribute/>` won't work (unless you wrap it in an `<Entity/>`).
+
+There are also new extensions.
+
+`<Table/>` display and format your data in a bootstrap 4 table.
+
+```javascript
+import Table from 'numbani-react/lib/ui/bootstrap4/Table';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
+```
+
+<Playground>
+<Entities repo={heroesRepo} entitiesRef={db.collection("heroes")}>
+    <LoadingError />
+    <LoadingSpinner name="circle" color="black"/>
+    <Table bordered columns={[
+        {name : "alias", title : "Hero"},
+        {name : "powers", title : "Powers"} 
+    ]} />
+</Entities>
+</Playground>
+
+TODO: Document all extensions and what props they can take.

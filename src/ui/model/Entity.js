@@ -71,14 +71,12 @@ class Entity extends Component {
             this._loadingPromise = null;
         }
         const loadingPromise = entityRef?
-        (defaultValue?
-            repo.read(entityRef).then(value => ({ ...defaultValue , ...(value || {})}))
-            :
-            repo.read(entityRef).then(value => {
-                if(!value) throw new Error("Entity doesn't exist");
-                return value;
-            })
-        )
+        repo.read(entityRef).then(value => {
+            if(Array.isArray(value))
+                console.warn("The value loaded in <Entity/> is an array, this is not supported by <Entity/>. You should use <Entities/> instead.");
+            if(!value && !defaultValue) throw new Error("Entity doesn't exist");
+            return ({ ...(defaultValue || {}), ...(value || {})});
+        })
         :(defaultValue?
             Promise.resolve(defaultValue)
             :
@@ -138,6 +136,10 @@ class Entity extends Component {
         if(this._loadingPromise){
             //TODO: Cancel here when repo request will be cancellable
             this._loadingPromise = null;
+        }
+        if(this._validationPromise){
+            //TODO: Cancel here (especially if we use backend validation)
+            this._validationPromise = null;
         }
     }
 
