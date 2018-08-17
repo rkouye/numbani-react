@@ -259,8 +259,8 @@ Entity.propTypes = {
     */
     entityRef : PropTypes.any,
     /** 
-     * This value will be used if entityRef is not set or if it fails to load 
-     * the entity value from the backend.
+     * This value will be used if entityRef is not set or if it load 
+     * an empty, or null or undefined value from the backend.
     */
     defaultValue : PropTypes.object,
     /**
