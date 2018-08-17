@@ -72,7 +72,7 @@ You may have to throttle your network connection to notice it.
 <Entity repo={heroesRepo} entityRef={db.collection("heroes").doc("batman")}>
 {
     (batman, {isLoading}, {reload})=><div>
-        <LoadingSpinner spinner="wave" color="blue" fadeIn="none"/>
+        <LoadingSpinner name="wave" color="blue" fadeIn="none"/>
         { !isLoading && <button onClick={reload}>Click to reload</button>}
     </div>
 }
