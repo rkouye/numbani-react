@@ -41,7 +41,7 @@
     "babel-eslint": "^8.2.6",
     "babel-polyfill": "^6.26.0",
     "css-loader": "^1.0.0",
-    "docz": "^0.10.3",
+    "docz": "^0.6.2",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-react-adapter-future": "^1.1.3",
