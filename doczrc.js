@@ -1,7 +1,7 @@
 import path from 'path';
 
 export default {
-    source: "./docs",
+    src: "./docs",
     title: "numbani-react",
     description: "Prototype faster 🌠 with React. Contains useful helpers.",
     indexHtml : "docs/index.html",
