@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import FirestorePersistence from './Firestore';
+import FirestorePersistence, {getSnapshot} from './Firestore';
 import expect from 'expect';
 
 describe("FirestoreProvider", ()=>{
@@ -24,7 +24,6 @@ describe("FirestoreProvider", ()=>{
 
     it.skip('it saves and read back the magic number', ()=>{
         const magicNumber = Math.floor(Math.random()*100);
-        expect.assertions(2);
         return provider
             .at("test")
             .save({ UID : "it saves the magic number", magicNumber})
@@ -33,7 +32,8 @@ describe("FirestoreProvider", ()=>{
                 return provider.read(ref);
             })
             .then(data => {
-                expect(data[0].magicNumber).toBe(magicNumber);
+                expect(data.magicNumber).toBe(magicNumber);
+                expect(getSnapshot(data)).toExist();
             });
     });
 });
