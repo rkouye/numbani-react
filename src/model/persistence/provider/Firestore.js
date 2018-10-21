@@ -6,6 +6,10 @@ const f_db = Symbol("Field firestore db");
 const m_extractId = Symbol("Method extract Id");
 const m_getRef = Symbol("Method get firestore ref");
 
+const hidden_snapshot = Symbol("Hidden link to snapshot");
+
+export const getSnapshot = (data => data[hidden_snapshot]);
+
 //FIXME: Use a custom ref and add a ref builder
 class FirestorePersistence extends Persistence {
     constructor(db, { mapDocId }={}){
@@ -42,10 +46,10 @@ class FirestorePersistence extends Persistence {
         return ref.get().then(snapshot => {
             // FIXME: Translate
             if(snapshot.docs){
-                return snapshot.docs.map(doc => doc.data());
+                return snapshot.docs.map(snapshot => ({...snapshot.data(), [hidden_snapshot] : snapshot}));
             } else {
                 if(!(snapshot.exists)) return null;
-                return snapshot.data();
+                return {...snapshot.data(), [hidden_snapshot] : snapshot};
             }
         });
     }
