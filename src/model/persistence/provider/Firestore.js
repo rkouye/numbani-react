@@ -10,6 +10,17 @@ const hidden_snapshot = Symbol("Hidden link to snapshot");
 
 export const getSnapshot = (data => data[hidden_snapshot]);
 
+const wrapSnapshot = (snapshot => ({...snapshot.data(), [hidden_snapshot] : snapshot}));
+
+const extractDataFromSnapshot = (snapshot => {
+    if(snapshot.docs){
+        return snapshot.docs.map(wrapSnapshot);
+    } else {
+        if(!(snapshot.exists)) return null;
+        return wrapSnapshot(snapshot);
+    }
+});
+
 //FIXME: Use a custom ref and add a ref builder
 class FirestorePersistence extends Persistence {
     constructor(db, { mapDocId }={}){
@@ -43,15 +54,14 @@ class FirestorePersistence extends Persistence {
     }
 
     read(ref){
-        return ref.get().then(snapshot => {
-            // FIXME: Translate
-            if(snapshot.docs){
-                return snapshot.docs.map(snapshot => ({...snapshot.data(), [hidden_snapshot] : snapshot}));
-            } else {
-                if(!(snapshot.exists)) return null;
-                return {...snapshot.data(), [hidden_snapshot] : snapshot};
-            }
-        });
+        return ref.get().then(extractDataFromSnapshot);
+    }
+    
+    watch(ref, onChange, onError){
+        return ref.onSnapshot(
+            (snapshot) => onChange(extractDataFromSnapshot(snapshot)),
+            onError
+        );
     }
 
     delete(ref){
