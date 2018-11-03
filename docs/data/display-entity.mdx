@@ -151,7 +151,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
 ```
 
 <Playground>
-<Entities repo={heroesRepo} entitiesRef={db.collection("heroes")}>
+<Entities repo={heroesRepo} entitiesRef={db.collection("heroes")} sync>
     <LoadingError />
     <LoadingSpinner name="circle" color="black"/>
     <Table bordered columns={[

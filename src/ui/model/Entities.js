@@ -3,23 +3,32 @@ import PropTypes from 'prop-types';
 import Async from 'react-promise';
 import {EntityContext} from './Entity';
 
+const wrapLoadedValuesWith = defaultList => (values => {
+    if(!values && !defaultList) throw new Error("Entity list is "+values);
+    if(!Array.isArray(values || defaultList))
+        throw new Error("Entity list is expected to be an array");
+    return values || defaultList;
+});
+
 class Entities extends Component {
 
-    static getInitialState(repo, entitiesRef, defaultList) {
+    static getInitialState({repo, entitiesRef, defaultList, sync}) {
         return {
             entitiesRef, //Just to compare on props change
             repo, // Just to compare on props change
             defaultList, // Just to compare on props change
+            sync, // Just to compare on props change
         }
     }
 
     static getDerivedStateFromProps(props, state) {
         if (props.entitiesRef !== state.entitiesRef 
             || props.repo !== state.repo 
+            || props.sync !== state.sync //TODO: We can have performance optimization here by : when true -> false : disable sync, false -> true : start it
             || (!props.entitiesRef && (props.defaultList !== state.defaultList))
         )
         {
-            return Entities.getInitialState(props.repo, props.entitiesRef, props.defaultList);
+            return Entities.getInitialState(props);
         } else return null;
     }
 
@@ -28,18 +37,14 @@ class Entities extends Component {
         this.state = {};
     }
 
-    _loadData(repo, entitiesRef, defaultList){
+    _loadData(){
+        const {repo, entitiesRef, defaultList} = this.props;
         if(this._loadingPromise){
             //TODO: Cancel here when repo request will be cancellable
             this._loadingPromise = null;
         }
         const loadingPromise = entitiesRef?
-        repo.read(entitiesRef).then(values => {
-            if(!values && !defaultList) throw new Error("Entity list is "+values);
-            if(!Array.isArray(values || defaultList))
-                throw new Error("Entity list is expected to be an array");
-            return values || defaultList;
-        })
+        repo.read(entitiesRef).then(wrapLoadedValuesWith(defaultList))
         :(defaultList?
             Promise.resolve(defaultList)
             :
@@ -51,6 +56,9 @@ class Entities extends Component {
             loadingPromise.then(loadedValues => {
                 if(this._loadingPromise===loadingPromise){
                     this.setState({loadedValues});
+                    if(this.props.sync && entitiesRef){
+                        this._startWatch()
+                    }
                     this._loadingPromise = null;
                 }
             }).catch(console.warn); // Just log here cause, Async will pass it to user.
@@ -58,13 +66,24 @@ class Entities extends Component {
 
     }
 
+    _startWatch(){
+        const {repo, entitiesRef, defaultList} = this.props;
+        this._stopWatch = repo.watch(entitiesRef,
+            changedValues => this.setState({
+                loadedValues : wrapLoadedValuesWith(defaultList)(changedValues),
+                syncTimestamp : new Date()}
+            ),
+            error => this.setState({ syncError : error})
+        );
+    }
+
     componentDidMount(){
-        this._loadData(this.props.repo, this.props.entitiesRef, this.props.defaultList);
+        this._loadData();
     }
 
     componentDidUpdate(){
         if(this.state.loadingPromise === null){
-            this._loadData(this.props.repo, this.props.entitiesRef, this.props.defaultList);
+            this._loadData();
         }
     }
 
@@ -73,12 +92,16 @@ class Entities extends Component {
             //TODO: Cancel here when repo request will be cancellable
             this._loadingPromise = null;
         }
+        if(this._stopWatch){
+            this._stopWatch();
+            this._stopWatch = null;
+        }
     }
 
     commands = {
         reload : ()=>{
             this.setState((prevState, props) => 
-                Entities.getInitialState(props.repo, props.entitiesRef, props.defaultList)
+                Entities.getInitialState(props)
             );
         }
     };
@@ -89,10 +112,13 @@ class Entities extends Component {
             entitiesRef : this.props.entitiesRef,
             defaultList : this.props.defaultList,
             // Loading
-            loadedValues,
+            loadedValues : this.state.loadedValues || loadedValues,
             loadingPromise : this.state.loadingPromise,
             isLoading : !!isLoading,
             loadingError,
+            // Sync
+            syncTimestamp : this.state.syncTimestamp,
+            syncError : this.state.syncError,
             // Command
             ...this.commands
         }}>
@@ -123,16 +149,15 @@ class Entities extends Component {
         );
     }
 
-    renderPostLoading= (loadedValues)=>{
+    renderPostLoading = (loadedValues) => {
         return(
             this.renderChildren({loadedValues})
         );
     }
-
 }
-
+//TODO: Document all proptypes
 Entities.propTypes = {
-
+    sync : PropTypes.bool
 };
 
 export default Entities;

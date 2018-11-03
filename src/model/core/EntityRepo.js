@@ -58,6 +58,10 @@ class EntityRepo {
         });
     }
 
+    watch(ref, onChange, onError){
+        return this.persistence.watch(ref, onChange, onError);
+    }
+
     read(ref){
         return this.persistence.read(ref);
         //TODO: Emit post read
