@@ -1,11 +1,13 @@
 ---
 name: 4. Load and display data
 ---
-
+import "parse-prop-types";
 import { Playground, Link, PropsTable } from 'docz';
 import Entity from 'numbani-react/lib/ui/model/Entity';
 import Entities from 'numbani-react/lib/ui/model/Entities';
+import {Table} from 'numbani-react/lib/ui/bootstrap4';
 import {db, heroesRepo} from 'numbani-react/docs/utils/FirebaseEntityManager';
+import DynamicPropstable from '../utils/DynamicPropsTable';
 
 
 import LoadingSpinner from 'numbani-react/lib/ui/spinkit/LoadingSpinner';
@@ -120,8 +122,6 @@ import LoadingError from 'numbani-react/lib/ui/bootstrap4/LoadingError';
 </Entity>
 </Playground>
 
-import Table from 'numbani-react/lib/ui/bootstrap4/Table';
-
 ## Entities
 
 `<Entity/>` doesn't support lists of data.
@@ -129,11 +129,11 @@ import Table from 'numbani-react/lib/ui/bootstrap4/Table';
 If you are planning to load a list of data from the backend, you can use `<Entities/>`.
 
 ```jsx
-<Entity repo={heroesRepo} entityRef={db.collection("heroes")}>
+<Entities repo={heroesRepo} entityRef={db.collection("heroes")}>
 {
     (heroes, {isLoading, loadingError}) => // return a component to display.
 }
-</Entity>
+</Entities>
 ```
 
 ## Extends Entities
@@ -154,11 +154,13 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
 <Entities repo={heroesRepo} entitiesRef={db.collection("heroes")} sync>
     <LoadingError />
     <LoadingSpinner name="circle" color="black"/>
-    <Table bordered columns={[
-        {name : "alias", title : "Hero"},
-        {name : "powers", title : "Powers"} 
+    <Table bordered hover columns={[
+        {header : "Hero", cell : hero => <span>⭐ {hero.alias}</span>},
+        {header : "Powers", cell : "powers"} 
     ]} />
 </Entities>
 </Playground>
+
+<DynamicPropstable of={Table}/>
 
 TODO: Document all extensions and what props they can take.
