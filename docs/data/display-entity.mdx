@@ -14,11 +14,15 @@ import LoadingSpinner from 'numbani-react/lib/ui/spinkit/LoadingSpinner';
 
 # Load and display data
 
-You can use numbani-react to load data in your backend and display it. You won't have to handle the promise, 
-loading animation, loading error or whatever.
+You can use numbani-react to load and display data stored in a remote server.
 
-Coming soon :
-- Handle data syncing using polling or web socket...
+You won't have to handle the request (fetch when the component is ready and cancel the request before unmounting), loading animation, loading error or whatever.
+
+It also supports polling the data and refreshing your UI when an update occurs in the backend.
+
+The only thing you need to do is implement a *PersistenceProvider* that will actually read and update the data.
+As a proof of concept and because it is handy for prototyping, numbani-react ship `FirestorePersistenceProvider`.
+This allow you, out of the box, to display and edit data stored in Firebase's firestore.
 
 ## Prerequisite
 
@@ -141,9 +145,9 @@ If you are planning to load a list of data from the backend, you can use `<Entit
 Extensions are also available for `<Entities/>`. For example, both `<LoadingSpinner/>` and
 `<LoadingError/>` still work. `<Attribute/>` won't work (unless you wrap it in an `<Entity/>`).
 
-There are also new extensions.
+There are also extensions that work only with `<Entities/>`.
 
-`<Table/>` display and format your data in a bootstrap 4 table.
+`<Table/>` display and format your list in a bootstrap 4 Table.
 
 ```javascript
 import Table from 'numbani-react/lib/ui/bootstrap4/Table';
@@ -163,4 +167,4 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Required for styling
 
 <DynamicPropstable of={Table}/>
 
-TODO: Document all extensions and what props they can take.
+As numbani-react is built for quick prototyping, a lot of extensions are coming soon.
