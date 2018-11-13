@@ -47,7 +47,7 @@ class DynamicPropsTable extends Component {
                         return (
                             <tr key={name}>
                                 <td className="table-primary"><b>{name}</b></td>
-                                <td>{console.log(prop) || displayProp(prop)}</td>
+                                <td>{displayProp(prop)}</td>
                                 <td>{this.props.comments && this.props.comments[name]}</td>
                             </tr>
                         )
