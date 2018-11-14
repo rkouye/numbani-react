@@ -351,7 +351,7 @@ const Attribute = injectEntityContext(AttributeBase, 'entityContext');
 Attribute.propTypes = {
     name : PropTypes.string.isRequired,
     edit : PropTypes.bool,
-    label : PropTypes.string,
+    label : PropTypes.node,
     placeholder : PropTypes.string,
     feedback : PropTypes.oneOfType([PropTypes.string, PropTypes.func])
 };

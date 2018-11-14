@@ -4,14 +4,16 @@ import { Table as BTable } from 'reactstrap';
 import Entity, { injectEntityContext } from '../model/Entity';
 import Attribute from './Attribute';
 
-class TableBase extends Component {
+const accessValue = (value, accessor) => typeof accessor==='function'?accessor(value):value[accessor];
+
+class BaseTable extends Component {
      render() {
-        const {entityContext : ec, columns, index, ...others} = this.props;
+        const {entityContext : ec, columns, index, placeholder, ...others} = this.props;
             return (
-                ec.loadedValues?<BTable {...others} >
+                (ec.loadedValues && ec.loadedValues.length > 0)?<BTable {...others} >
                     <thead><tr>
                         {
-                            columns.map((column,i) =><th key={i}>{column.title}</th>)
+                            columns.map((column,i) =><th key={i}>{column.header}</th>)
                         }
                         </tr>
                     </thead>
@@ -20,7 +22,16 @@ class TableBase extends Component {
                             ec.loadedValues.map((value,i) =>
                                 <tr key={index?value[index]:i}>
                                     <Entity repo={ec.repo} defaultValue={value}>
-                                        {columns.map((column,i) =><td key={i}><Attribute name={column.name}/></td>)}
+                                        {columns.map((column,i) =>
+                                            <td key={i}>
+                                                {
+                                                    typeof column.cell === "function"?
+                                                        column.cell(value)
+                                                        :
+                                                        <Attribute name={column.cell} />
+                                                }
+                                            </td>)
+                                        }
                                     </Entity>
                                 </tr>
                             )
@@ -28,21 +39,21 @@ class TableBase extends Component {
                     </tbody>
                 </BTable>
                 :
-                null
+                (placeholder || null)
             );
     }
 }
 
-const Table = injectEntityContext(TableBase);
+const Table = injectEntityContext(BaseTable);
 
 Table.propTypes = {
     children : PropTypes.node,
     columns : PropTypes.arrayOf(PropTypes.shape({
-        name : PropTypes.string.isRequired,
-        title : PropTypes.string
+        header : PropTypes.node.isRequired,
+        cell : PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired
     })).isRequired,
+    placeholder : PropTypes.node,
     index : PropTypes.string,
-    // To be passed below
     size: PropTypes.string,
     bordered: PropTypes.bool,
     borderless: PropTypes.bool,

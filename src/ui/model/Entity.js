@@ -16,6 +16,13 @@ export const injectEntityContext = (Component, propName) => props => (
     </EntityContext.Consumer>
 );
 
+const wrapLoadedValueWith = defaultValue => (value => {
+    if(Array.isArray(value))
+        console.warn("The value loaded in <Entity/> is an array, this is not supported by <Entity/>. You should use <Entities/> instead.");
+    if(!value && !defaultValue) throw new Error("Entity doesn't exist");
+    return ({ ...(defaultValue || {}), ...(value || {})});
+});
+
 const initialValidationInfo = {
     validationPromise : null,
     isValid : undefined,
@@ -30,13 +37,19 @@ const initialSavingInfo = {
     savingError : undefined,
     isSaved : false
 }
+
+const initialSyncInfo = {
+    syncTimestamp : undefined,
+    syncError : undefined
+}
 class Entity extends Component {
 
-    static getInitialState(repo, entityRef, defaultValue) {
+    static getInitialState({repo, entityRef, defaultValue, sync}) {
         return {
             entityRef, //Just to compare on props change
             repo, // Just to compare on props change
             defaultValue, // Just to compare on props change
+            sync, // Just to compare on props change
 
             editedValue : null,
 
@@ -45,18 +58,21 @@ class Entity extends Component {
 
             ...initialValidationInfo,
 
-            ...initialSavingInfo
+            ...initialSavingInfo,
+
+            ...initialSyncInfo
         }
     }
 
     static getDerivedStateFromProps(props, state) {
         if (props.entityRef !== state.entityRef 
             || props.repo !== state.repo 
+            || props.sync !== state.sync //TODO: We can have performance optimization here : when true -> false : disable sync, false -> true : start it
             || (!props.entityRef && (props.defaultValue !== state.defaultValue))
         )
         {
             if(state.editedValue) console.warn("Resetting state on an entity view with pending modification. Make sure this is really what you want to do.");
-            return Entity.getInitialState(props.repo, props.entityRef, props.defaultValue);
+            return Entity.getInitialState(props);
         } else return null;
     }
 
@@ -65,18 +81,16 @@ class Entity extends Component {
         this.state = {};
     }
 
-    _loadData(repo, entityRef, defaultValue){
+    _loadData(){
+        
+        const {repo, entityRef, defaultValue} = this.props;
+        
         if(this._loadingPromise){
             //TODO: Cancel here when repo request will be cancellable
             this._loadingPromise = null;
         }
         const loadingPromise = entityRef?
-        repo.read(entityRef).then(value => {
-            if(Array.isArray(value))
-                console.warn("The value loaded in <Entity/> is an array, this is not supported by <Entity/>. You should use <Entities/> instead.");
-            if(!value && !defaultValue) throw new Error("Entity doesn't exist");
-            return ({ ...(defaultValue || {}), ...(value || {})});
-        })
+        repo.read(entityRef).then(wrapLoadedValueWith(defaultValue))
         :(defaultValue?
             Promise.resolve(defaultValue)
             :
@@ -88,14 +102,29 @@ class Entity extends Component {
             loadingPromise.then(loadedValue => {
                 if(this._loadingPromise===loadingPromise){
                     this.setState({loadedValue});
+                    if(this.props.sync && entityRef){
+                        this._startWatch()
+                    }
                     this._loadingPromise = null;
                 }
             }).catch(console.warn); // Just log here cause, Async will pass it to user.
         });
-
     }
 
-    _validateData(repo, value){
+    _startWatch(){
+        const {repo, entityRef, defaultValue} = this.props;
+        this._stopWatch = repo.watch(entityRef,
+            changedValue => this.setState({
+                loadedValue : wrapLoadedValueWith(defaultValue)(changedValue),
+                syncTimestamp : new Date()}
+            ),
+            error => this.setState({ syncError : error})
+        );
+    }
+
+    _validateData(){
+        const {repo} = this.props;
+        const value = this.state.editedValue || this.state.loadedValue;
         if(this._validationPromise){
             //TODO: Cancel here (especially if we use backend validation)
             this._validationPromise = null;
@@ -121,14 +150,14 @@ class Entity extends Component {
         });
     }
     componentDidMount(){
-        this._loadData(this.props.repo, this.props.entityRef, this.props.defaultValue);
+        this._loadData();
     }
 
     componentDidUpdate(){
         if(this.state.loadingPromise === null){
-            this._loadData(this.props.repo, this.props.entityRef, this.props.defaultValue);
+            this._loadData();
         } else if(this.state.loadedValue !== null && this.state.validationPromise === null){
-            this._validateData(this.props.repo, this.state.editedValue || this.state.loadedValue);
+            this._validateData();
         }
     }
 
@@ -141,12 +170,16 @@ class Entity extends Component {
             //TODO: Cancel here (especially if we use backend validation)
             this._validationPromise = null;
         }
+        if(this._stopWatch){
+            this._stopWatch();
+            this._stopWatch = null;
+        }
     }
 
     commands = {
         reload : ()=>{
             this.setState((prevState, props) => 
-                Entity.getInitialState(props.repo, props.entityRef, props.defaultValue)
+                Entity.getInitialState(props)
             );
         },
         reset : ()=>{
@@ -189,11 +222,14 @@ class Entity extends Component {
             entityRef : this.props.entityRef,
             defaultValue : this.props.defaultValue,
             // Loading
-            loadedValue,
+            loadedValue : this.state.loadedValue || loadedValue,
             loadingPromise : this.state.loadingPromise,
             editedValue : this.state.editedValue,
             isLoading : !!isLoading,
             loadingError,
+            // Sync
+            syncTimestamp : this.state.syncTimestamp,
+            syncError : this.state.syncError,
             // Validation
             isValid : this.state.isValid,
             validationErrors : this.state.validationErrors,

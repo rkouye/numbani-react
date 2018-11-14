@@ -5,10 +5,10 @@ import { injectEntityContext } from '../model/Entity';
 
 class SaveButtonBase extends Component {
     render() {
-        const ec = this.props.entityContext;
+        const {entityContext : ec, requireEdit} = this.props;
         return (
             <Button 
-                disabled={!ec.editedValue || ec.isSaving || !ec.isValid} onClick={ec.save}
+                disabled={ (!ec.editedValue && requireEdit) || ec.isSaving || !ec.isValid} onClick={ec.save}
                 color="primary"
             >{this.props.children}</Button>
         );
@@ -18,7 +18,8 @@ class SaveButtonBase extends Component {
 const SaveButton = injectEntityContext(SaveButtonBase);
 
 SaveButton.propTypes = {
-    children : PropTypes.node
+    children : PropTypes.node,
+    requireEdit : PropTypes.bool
 };
 
 export default SaveButton;
