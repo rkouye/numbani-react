@@ -245,9 +245,12 @@ class Entity extends Component {
         }}>
         {(typeof this.props.children === 'function')?
             this.props.children(
-                this.state.editedValue || loadedValue,
+                this.state.editedValue || this.state.loadedValue || loadedValue,
                 { 
-                    isLoading : !!isLoading , loadingError, loadedValue, isDirty : !!this.state.editedValue,
+                    isLoading : !!isLoading ,
+                    loadingError, 
+                    loadedValue : this.state.loadedValue || loadedValue,
+                    isDirty : !!this.state.editedValue,
                     // Validation
                     isValid : this.state.isValid, validationErrors : this.state.validationErrors, 
                     isValidating : this.state.isValidating, validationErrorsCount : this.state.validationErrorsCount,

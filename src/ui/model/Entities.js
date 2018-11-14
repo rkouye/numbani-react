@@ -124,9 +124,10 @@ class Entities extends Component {
         }}>
         {(typeof this.props.children === 'function')?
             this.props.children(
-                loadedValues,
+                this.state.loadedValues || loadedValues,
                 { 
-                    isLoading : !!isLoading , loadingError, loadedValues
+                    isLoading : !!isLoading , loadingError, 
+                    loadedValues : this.state.loadedValues || loadedValues
                 },
                 this.commands
             )
