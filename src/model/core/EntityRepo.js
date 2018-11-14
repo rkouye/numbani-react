@@ -60,11 +60,17 @@ class EntityRepo {
 
     watch(ref, onChange, onError){
         return this.persistence.watch(ref, onChange, onError);
+        //TODO: Emit post read
     }
 
     read(ref){
         return this.persistence.read(ref);
         //TODO: Emit post read
+    }
+
+    delete(ref){
+        //TODO: Emit pre and post delete event
+        return this.persistence.delete(ref);
     }
 
 
