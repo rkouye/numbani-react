@@ -1,3 +1,5 @@
+**🚫 Not maintained anymore**
+
 # numbani-react
 
 [![Travis][build-badge]][build]
