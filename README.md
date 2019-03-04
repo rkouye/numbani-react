@@ -34,11 +34,11 @@ yarn add numbani-react
 
 [Semako KOUYE](https://github.com/semako-kouye)
 
-[build-badge]: https://img.shields.io/travis/numbani/numbani-react/master.svg
-[build]: https://travis-ci.org/numbani/numbani-react
+[build-badge]: https://img.shields.io/travis/semako-kouye/numbani-react/master.svg
+[build]: https://travis-ci.org/semako-kouye/numbani-react
 
 [npm-badge]: https://img.shields.io/npm/v/numbani-react.svg
 [npm]: https://www.npmjs.org/package/numbani-react
 
-[coveralls-badge]: https://img.shields.io/coveralls/numbani/numbani-react/master.svg
-[coveralls]: https://coveralls.io/github/numbani/numbani-react
+[coveralls-badge]: https://img.shields.io/coveralls//semako-kouye/numbani-react/master.svg
+[coveralls]: https://coveralls.io/github/semako-kouye/numbani-react
