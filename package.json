@@ -58,9 +58,9 @@
     "webpack": "^4.16.5"
   },
   "author": "semako-kouye",
-  "homepage": "https://github.com/numbani/numbani-react",
+  "homepage": "https://numbani-react.netlify.com",
   "license": "MIT",
-  "repository": "https://github.com/numbani/numbani-react",
+  "repository": "https://github.com/semako-kouye/numbani-react",
   "keywords": [
     "react",
     "library",
