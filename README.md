@@ -1,4 +1,4 @@
-**🚫 Not maintained anymore**
+**🚫 Still in experimentation **
 
 # numbani-react
 
