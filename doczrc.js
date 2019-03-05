@@ -4,16 +4,18 @@ export default {
     src: "./docs",
     title: "numbani-react",
     description: "Prototype faster 🌠 with React. Contains useful helpers.",
-    indexHtml : "docs/index.html",
-    menu : [
+    indexHtml: "docs/index.html",
+    menu: [
         "1. Getting started",
         "2. Authentication",
-        ["3. Data", [
-            "1. Concepts",
-            "2. Load and display data",
-            "3. Edit, validate and save data"
+        {
+            name: "3. Data",
+            menu: [
+                "1. Concepts",
+                "2. Load and display data",
+                "3. Edit, validate and save data"
             ]
-        ],
+        },
         "References"
     ],
     modifyBundlerConfig: (config) => {
