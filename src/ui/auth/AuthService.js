@@ -1,4 +1,4 @@
-import React , { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import AuthService from '../../auth/AuthService';
 
@@ -7,45 +7,34 @@ import AuthService from '../../auth/AuthService';
  */
 const AuthContext = React.createContext(null);
 
+function cloneAuthService(authService) {
+    // Will force consumer to render, see https://reactjs.org/docs/context.html#caveats
+    return Object.assign(Object.create(authService), authService);
+}
+
 /**
  * This react component is a shortcut to provide authService to React component.
- * It is useful cause it handles the component lifecycle and update only when needed.
+ * It is useful cause it handles the component life cycle and update only when needed.
  * Under the hood it is just a react context provider.
  * 
  * @export
- * @class AuthServiceProvider
- * @extends {Component}
  */
-export class AuthServiceProvider extends Component {
+export function AuthServiceProvider({ authService, children }) {
 
-    state = {}
+    const [value, setValue] = useState(() => cloneAuthService(authService));
 
-    static cloneAuthService(authService){
-        // Force consumer to render, see https://reactjs.org/docs/context.html#caveats
-        return Object.assign(Object.create(authService), authService);
-    }
-    
-    static getDerivedStateFromProps(props, state){
-        return { authService : AuthServiceProvider.cloneAuthService(props.authService) };
-    }
-
-    componentDidMount() {
-        this.unsubscribe = this.props.authService.onAuthStateChanged(() => {
-            this.setState({ authService : AuthServiceProvider.cloneAuthService(this.props.authService) })
+    useEffect(() => {
+        return authService.onAuthStateChanged(() => {
+            setValue(cloneAuthService(authService));
         });
-    }
-    
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-    
-    render(){
-        return (
-        <AuthContext.Provider value={this.state.authService}>
-           {this.props.children}
+    }, [authService]);
+
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
         </AuthContext.Provider>
-        );
-    }
+    );
+
 }
 
 AuthServiceProvider.propTypes = {
